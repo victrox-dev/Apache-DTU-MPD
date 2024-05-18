@@ -8,7 +8,7 @@ const TSD_Buttons = {
         Load_Page(currentPage);
     },
     B4: function () {
-        Load_Page("MAP");
+        Load_Page("TSD_MAP");
     },
     B5: function () {
         // TODO: RTE Page
@@ -21,6 +21,6 @@ const TSD_Buttons = {
         Load_Page(currentPage);
     },
     T3: function () {
-        Load_Page("SHOW");
+        Load_Page("TSD_SHOW");
     }
 }

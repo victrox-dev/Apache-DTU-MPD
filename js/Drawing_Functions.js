@@ -1,4 +1,4 @@
-function MPD_Init(defaultPage = "TSD") {
+function MPD_Init(defaultPage = "Menu") {
     // Create canvas element
     const body = document.querySelector("body");
     const canvas = document.createElement("canvas");
@@ -121,6 +121,7 @@ function MPD_Init(defaultPage = "TSD") {
         ctx.stroke();
     }
     
+    currentPage = defaultPage;
     Load_Page(defaultPage); // Load the specified page
 }
 
@@ -136,6 +137,13 @@ function Clear_Screen() {
 }
 
 function Draw_Screen_Background() {
+    if (currentPage.search("TSD") === -1) {
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.fillStyle = "#000";
+        ctx.fillRect(screen.x, screen.y, screen.w, screen.h);
+        ctx.globalCompositeOperation = 'source-over';
+        return null;
+    }
     const mapType = Database["TSD"]["SETTINGS"]["MAP"]["TYPE"];
     const colorBand = Database["TSD"]["SETTINGS"]["MAP"]["COLOR_BAND"];
     ctx.globalCompositeOperation = 'destination-over';
@@ -154,13 +162,13 @@ function Draw_Screen_Background() {
         }
     }
     ctx.fillStyle = "#000";
-    ctx.fillRect(screen.x, screen.y, 670, 670); // Screen background
+    ctx.fillRect(screen.x, screen.y, screen.w, screen.h);
     ctx.globalCompositeOperation = 'source-over';
 
-    if (!inputReady) { // Clear KU if page changed
-        KU.value = null;
-        numVars = 0;
-    }
+    // if (!inputReady) { // Clear KU if page changed
+    //     KU.value = null;
+    //     numVars = 0;
+    // }
 }
 
 function Load_Page(page, variable = null) {
@@ -342,8 +350,10 @@ function Draw_Options_Box(x, y, w, h, align = "left", prompt = "options") {
     ctx.lineWidth = 3;
 
     ctx.beginPath();
-    ctx.moveTo(x, y + (ctx.lineWidth / 2));
-    ctx.lineTo(x + w, y + (ctx.lineWidth / 2));
+    if (align !== "top") {
+        ctx.moveTo(x, y + (ctx.lineWidth / 2));
+        ctx.lineTo(x + w, y + (ctx.lineWidth / 2));
+    }
 
     if (align === "left") {
         ctx.moveTo(x + w, y);
@@ -351,10 +361,17 @@ function Draw_Options_Box(x, y, w, h, align = "left", prompt = "options") {
     } else if (align === "right") {
         ctx.moveTo(x, y);
         ctx.lineTo(x, y + h);
+    } else {
+        ctx.moveTo(x + w, y);
+        ctx.lineTo(x + w, y + h);
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y + h);
     }
 
-    ctx.moveTo(x + w, y + h - (ctx.lineWidth / 2));
-    ctx.lineTo(x, y + h - (ctx.lineWidth / 2));
+    if (align !== "bottom") {
+        ctx.moveTo(x + w, y + h - (ctx.lineWidth / 2));
+        ctx.lineTo(x, y + h - (ctx.lineWidth / 2));
+    }
     ctx.stroke();
 
     // Draw Prompt Text
@@ -370,11 +387,14 @@ function Draw_Options_Box(x, y, w, h, align = "left", prompt = "options") {
     }
 
     for (let i = 0; i < prompt.length; i++) {
+        ctx.font = "17px Apache";
         const textWidth = ctx.measureText(prompt[i]).width / 2;
         if (align === "left") {
             Draw_Text(prompt[i], (boxCenter.x - (ctx.lineWidth / 2) - textWidth) + xAlign, boxCenter.y + (i * 14), 17);
         } else if (align === "right") {
             Draw_Text(prompt[i], (x + (ctx.lineWidth / 2) - textWidth) - xAlign, boxCenter.y + (i * 14), 17);
+        } else if (align === "bottom") {
+            Draw_Text(prompt, x + w / 2 - (ctx.measureText(prompt).width / 2), y + ctx.measureText(prompt).fontBoundingBoxAscent / 2, 17);
         }
     }
 }

@@ -20,7 +20,7 @@ let inputReady = false;
 const scripts = ["js/Drawing_Functions.js", "js/Page_Definitions.js",
     "js/Process_Data.js", "js/button_profiles/TSD_Buttons.js",
     "js/button_profiles/TSD_POINT_Buttons.js", "js/button_profiles/MAP_Buttons.js",
-    "js/button_profiles/SHOW_Buttons.js"
+    "js/button_profiles/SHOW_Buttons.js", "js/button_profiles/Menu_Buttons.js"
 ];
 
 // Button Related Variables
@@ -122,7 +122,7 @@ let Database = {
 // Basic empty button commands for overwriting later
 const button_commands_empty = {
     L1: function (){},    L2: function (){},    L3: function (){},    L4: function (){},
-    L5: function (){},    L6: function (){},    B1: function (){},    B2: function (){},
+    L5: function (){},    L6: function (){},    B1: function (){Load_Page("Menu");},    B2: function (){},
     B3: function (){},    B4: function (){},    B5: function (){},    B6: function (){},
     R1: function (){},    R2: function (){},    R3: function (){},    R4: function (){},
     R5: function (){},    R6: function (){},    T6: function (){},    T5: function (){},

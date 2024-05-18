@@ -1,4 +1,94 @@
 const page_definitions = {
+    Menu: function () {
+        currentPage = "Menu";
+        button_commands = {...button_commands_empty, ...Menu_Buttons};
+
+        Clear_Screen();
+        Draw_Screen_Background();
+        
+        const leftMenuHeight = mpdButtons.L6.y - (mpdButtons.L3.y - horizSpacing);
+        Draw_Options_Box(screen.x, mpdButtons.L3.y - 20, 65, leftMenuHeight, "left", "MISSION");
+        
+        const rightMenuHeight = mpdButtons.R6.y - (mpdButtons.R1.y - horizSpacing);
+        Draw_Options_Box(screen.x + screen.w - 80, mpdButtons.L1.y - 20, 80, rightMenuHeight, "right", "COMMUNICATION");
+        
+        const bottomMenuWidth = mpdButtons.B6.x - (mpdButtons.B2.x - 60);
+        Draw_Options_Box(mpdButtons.B2.x - 10, screen.y + screen.h - 48, bottomMenuWidth, 48, "bottom", "AIRCRAFT");
+        
+        Draw_Menu({
+            T1: {
+                text: "VIDEO",
+                arrow: true
+            },
+            T2: {
+                text: "VCR",
+                arrow: true
+            },
+            L3: {
+                text: "ASE",
+                arrow: true
+            },
+            L4: {
+                text: "TSD",
+                arrow: true
+            },
+            L5: {
+                text: "WPN",
+                arrow: true
+            },
+            L6: {
+                text: "FCR",
+                arrow: true
+            },
+            B1: {
+                text: "DMS"
+            },
+            B2: {
+                text: "ENG",
+                arrow: true
+            },
+            B3: {
+                text: "FLT",
+                arrow: true
+            },
+            B4: {
+                text: "FUEL",
+                arrow: true
+            },
+            B5: {
+                text: "PERF",
+                arrow: true
+            },
+            B6: {
+                text: "UTIL",
+                arrow: true
+            },
+            R1: {
+                text: "DL",
+                arrow: true
+            },
+            R2: {
+                text: "XPNDR",
+                arrow: true
+            },
+            R3: {
+                text: "UHF",
+                arrow: true
+            },
+            R4: {
+                text: "FM",
+                arrow: true
+            },
+            R5: {
+                text: "HF",
+                arrow: true
+            },
+            R6: {
+                text: "COM",
+                arrow: true
+            }
+        });
+    },
     TSD: function () {
         currentPage = "TSD";
         button_commands = {...button_commands_empty, ...TSD_Buttons}; // Set appropriate button profile for the page
@@ -66,8 +156,8 @@ const page_definitions = {
         Draw_Special_Text("ACQ", "R6", false, false, 0, -12);
         Draw_Special_Text("TADS", "R6", true, false, 0, 12);
     },
-    MAP: function () {
-        currentPage = "MAP";
+    TSD_MAP: function () {
+        currentPage = "TSD_MAP";
         button_commands = {...button_commands_empty, ...TSD_Buttons, ...MAP_Buttons}; // Inherit other profiles first...
         const map_type = Database["TSD"]["SETTINGS"]["MAP"]["TYPE"];
         
@@ -155,8 +245,8 @@ const page_definitions = {
         Draw_Special_Text("VIEW", "R6", false, false, 0, -12);
         Draw_Special_Text("2D", "R6", true, false, 0, 12);
     },
-    SHOW: function () {
-        currentPage = "SHOW";
+    TSD_SHOW: function () {
+        currentPage = "TSD_SHOW";
         button_commands = {...button_commands_empty, ...TSD_Buttons, ...SHOW_Buttons};
         const phase = Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"];
         const NAV = Database["TSD"]["SETTINGS"]["SHOW"]["NAV"];
