@@ -31,8 +31,11 @@ const TSD_POINT_ADD_Buttons = {
         KU.focus();
         inputReady = true;
         
-        changeScreen = function () {
-            Draw_TSD_Point_Data();
+        updateScreen = function () {
+            // Draw_TSD_Point_Data();
+            // const pointKey = {L3: ["WAYPOINT", "WP"], L4: ["HAZARD", "TU"], L5: ["CONTROL MEASURE", "CP"], L6: ["TARGET", "TG"]};
+            const pointKey = ["WP", "TU", "CP", "TG"];
+            // L1 UPDATE START
             ctx.clearRect(screen.x, mpdButtons.L1.y + 20 - 30, 150, 60);
             Draw_Screen_Background();
             Draw_Menu({
@@ -44,10 +47,11 @@ const TSD_POINT_ADD_Buttons = {
             
             Draw_Menu({
                 L1: {
-                    text: "WP", // TODO: Update this based on selected point type
+                    text: pointKey[pointIndex],
                     yDeviation: 12
                 }
             });
+            // L1 UPDATE END
         };
         
         storeData = function () {
@@ -58,11 +62,11 @@ const TSD_POINT_ADD_Buttons = {
                 MGRS: tempData[2],
                 ALT: tempData[3]
             }
-            DTC_Structure["TSD"][pointIndexKey[pointIndex]].push(point);
+            Database["TSD"][pointIndexKey[pointIndex]].push(point);
         };
         inputPrompt = "IDENT: ";
         returnTo = "TSD_POINT";
-        changeScreen();
+        updateScreen();
         Draw_User_Input_Dialog();
     },
     L2: function () {

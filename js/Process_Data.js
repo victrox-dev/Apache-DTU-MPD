@@ -1,17 +1,10 @@
 const pointAddSequence = ["IDENT", "FREE", "MGRS", "ALT"];
-let pointIndex = null;
-
-let tempData = [];
-let numVars = 0;
-let inputReady = false;
-let inputPrompt = null;
-let returnTo = null;
 
 let storeData = function () {
     alert("Storing Data...");
 };
 
-let changeScreen = function () {
+let updateScreen = function () {
     alert("Changing UI elements");
 }
 
@@ -31,7 +24,7 @@ function Process_Data() {
         KU.placeholder = tempData[tempData.length - numVars];
         inputPrompt = tempData[tempData.length - numVars] + ": ";
         Draw_User_Input_Dialog();
-        changeScreen();
+        updateScreen();
     } else {
         storeData();
         KU.placeholder = "KEYBOARD UNIT (INPUT)";

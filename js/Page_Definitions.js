@@ -1,337 +1,3 @@
-let DTC_Structure = {
-    TSD:{
-        WAYPOINTS: [
-            
-        ],
-        HAZARDS: [
-            
-        ],
-        CONTROLMEASURES: [
-            
-        ],
-        TARGETS: [
-            
-        ],
-        SETTINGS:{
-            MAP:{
-                ORIENT: "TRK-UP",
-                COLOR_BAND: "NONE",
-                TYPE: "CHART",
-                CTR: false,
-                GRID: true
-            },
-            SHOW:{
-                ATK:{
-                    HSI: false,
-                    ENDR: true,
-                    WIND: true,
-                    CURRENT_ROUTE: false,
-                    INACTIVE_ZONES: true,
-                    FCR_TGTS_OBSTACLES: true,
-                    CPG_CURSOR: false,
-                    CURSOR_INFO: false,
-                    COORD_SHOW: {
-                        CONTROL_MEASURES: true,
-                        FRIENDLY_UNITS: true,
-                        ENEMY_UNITS: false,
-                        PLANNED_TGTS_THREATS: true,
-                        SHOT: true // TODO: Add SHOT option to DCS backend
-                    }
-                },
-                NAV:{
-                    HSI: false,
-                    ENDR: true,
-                    WIND: true,
-                    WP_DATA: true,
-                    INACTIVE_ZONES: false,
-                    OBSTACLES: true,
-                    CPG_CURSOR: false,
-                    CURSOR_INFO: false,
-                    COORD_SHOW: {
-                        CONTROL_MEASURES: true,
-                        FRIENDLY_UNITS: false,
-                        ENEMY_UNITS: false,
-                        PLANNED_TGTS_THREATS: false
-                    }
-                }
-            },
-            DEFAULT_PHASE: "NAV"
-        }
-    }
-};
-
-let tempVariables = {
-    
-};
-
-const button_commands_empty = {
-    L1: function () {
-        // Nothing
-    },
-    L2: function () {
-        // Nothing
-    },
-    L3: function () {
-        // Nothing
-    },
-    L4: function () {
-        // Nothing
-    },
-    L5: function () {
-        // Nothing
-    },
-    L6: function () {
-        // Nothing
-    },
-    B1: function () {
-        // Nothing
-    },
-    B2: function () {
-        // Nothing
-    },
-    B3: function () {
-        // Nothing
-    },
-    B4: function () {
-        // Nothing
-    },
-    B5: function () {
-        // Nothing
-    },
-    B6: function () {
-        // Nothing
-    },
-    R1: function () {
-        // Nothing
-    },
-    R2: function () {
-        // Nothing
-    },
-    R3: function () {
-        // Nothing
-    },
-    R4: function () {
-        // Nothing
-    },
-    R5: function () {
-        // Nothing
-    },
-    R6: function () {
-        // Nothing
-    },
-    T6: function () {
-        // Nothing
-    },
-    T5: function () {
-        // Nothing
-    },
-    T4: function () {
-        // Nothing
-    },
-    T3: function () {
-        // Nothing
-    },
-    T2: function () {
-        // Nothing
-    },
-    T1: function () {
-        // Nothing
-    }
-};
-
-let button_commands = {};
-
-const horizSpacing = 85;
-const vertSpacing = 85;
-
-const HorizRow = {x: 210, y: 10};
-const VertRow = {x: 20, y: 180};
-
-const screen = {x: 880 / 2 - 670 / 2, y: 860 / 2 - 670 / 2, w: 670, h: 670}
-
-const mpdButtons = {
-    T1: {
-        x: HorizRow.x,
-        y: HorizRow.y,
-        width: 40,
-        height: 40
-    },
-    T2: {
-        x: HorizRow.x + (horizSpacing),
-        y: HorizRow.y,
-        width: 40,
-        height: 40
-    },
-    T3: {
-        x: HorizRow.x + (horizSpacing * 2),
-        y: HorizRow.y,
-        width: 40,
-        height: 40
-    },
-    T4: {
-        x: HorizRow.x + (horizSpacing * 3),
-        y: HorizRow.y,
-        width: 40,
-        height: 40
-    },
-    T5: {
-        x: HorizRow.x + (horizSpacing * 4),
-        y: HorizRow.y,
-        width: 40,
-        height: 40
-    },
-    T6: {
-        x: HorizRow.x + (horizSpacing * 5),
-        y: HorizRow.y,
-        width: 40,
-        height: 40
-    },
-    L1: {
-        x: VertRow.x,
-        y: VertRow.y,
-        width: 40,
-        height: 40
-    },
-    L2: {
-        x: VertRow.x,
-        y: VertRow.y + (vertSpacing),
-        width: 40,
-        height: 40
-    },
-    L3: {
-        x: VertRow.x,
-        y: VertRow.y + (vertSpacing * 2),
-        width: 40,
-        height: 40
-    },
-    L4: {
-        x: VertRow.x,
-        y: VertRow.y + (vertSpacing * 3),
-        width: 40,
-        height: 40
-    },
-    L5: {
-        x: VertRow.x,
-        y: VertRow.y + (vertSpacing * 4),
-        width: 40,
-        height: 40
-    },
-    L6: {
-        x: VertRow.x,
-        y: VertRow.y + (vertSpacing * 5),
-        width: 40,
-        height: 40
-    },
-    FCR: {
-        x: VertRow.x - 15,
-        y: VertRow.y + (vertSpacing * 6),
-        width: 55,
-        height: 40
-    },
-    WPN: {
-        x: VertRow.x - 15,
-        y: VertRow.y + (vertSpacing * 7),
-        width: 55,
-        height: 40
-    },
-    TSD: {
-        x: HorizRow.x - horizSpacing - 15,
-        y: HorizRow.y + 800,
-        width: 55,
-        height: 40
-    },
-    B1: {
-        x: HorizRow.x,
-        y: HorizRow.y + 800,
-        width: 40,
-        height: 40
-    },
-    B2: {
-        x: HorizRow.x + (horizSpacing),
-        y: HorizRow.y + 800,
-        width: 40,
-        height: 40
-    },
-    B3: {
-        x: HorizRow.x + (horizSpacing * 2),
-        y: HorizRow.y + 800,
-        width: 40,
-        height: 40
-    },
-    B4: {
-        x: HorizRow.x + (horizSpacing * 3),
-        y: HorizRow.y + 800,
-        width: 40,
-        height: 40
-    },
-    B5: {
-        x: HorizRow.x + (horizSpacing * 4),
-        y: HorizRow.y + 800,
-        width: 40,
-        height: 40
-    },
-    B6: {
-        x: HorizRow.x + (horizSpacing * 5),
-        y: HorizRow.y + 800,
-        width: 40,
-        height: 40
-    },
-    AC: {
-        x: HorizRow.x + (horizSpacing * 6),
-        y: HorizRow.y + 800,
-        width: 55,
-        height: 40
-    },
-    R1: {
-        x: VertRow.x + 800,
-        y: VertRow.y,
-        width: 40,
-        height: 40
-    },
-    R2: {
-        x: VertRow.x + 800,
-        y: VertRow.y + (vertSpacing),
-        width: 40,
-        height: 40
-    },
-    R3: {
-        x: VertRow.x + 800,
-        y: VertRow.y + (vertSpacing * 2),
-        width: 40,
-        height: 40
-    },
-    R4: {
-        x: VertRow.x + 800,
-        y: VertRow.y + (vertSpacing * 3),
-        width: 40,
-        height: 40
-    },
-    R5: {
-        x: VertRow.x + 800,
-        y: VertRow.y + (vertSpacing * 4),
-        width: 40,
-        height: 40
-    },
-    R6: {
-        x: VertRow.x + 800,
-        y: VertRow.y + (vertSpacing * 5),
-        width: 40,
-        height: 40
-    },
-    VID: {
-        x: VertRow.x + 800,
-        y: VertRow.y + (vertSpacing * 6),
-        width: 55,
-        height: 40
-    },
-    COM: {
-        x: VertRow.x + 800,
-        y: VertRow.y + (vertSpacing * 7),
-        width: 55,
-        height: 40
-    }
-};
-
 const page_definitions = {
     TSD: function () {
         currentPage = "TSD";
@@ -386,7 +52,7 @@ const page_definitions = {
         Draw_Menu({
             R3: {
                 text: "CTR",
-                boxed: DTC_Structure["TSD"]["SETTINGS"]["MAP"]["CTR"]
+                boxed: Database["TSD"]["SETTINGS"]["MAP"]["CTR"]
             },
             R4: {
                 text: "FRZ"
@@ -403,7 +69,7 @@ const page_definitions = {
     MAP: function () {
         currentPage = "MAP";
         button_commands = {...button_commands_empty, ...TSD_Buttons, ...MAP_Buttons}; // Inherit other profiles first...
-        const map_type = DTC_Structure["TSD"]["SETTINGS"]["MAP"]["TYPE"];
+        const map_type = Database["TSD"]["SETTINGS"]["MAP"]["TYPE"];
         
         Clear_Screen();
         Draw_Screen_Background();
@@ -425,7 +91,7 @@ const page_definitions = {
             },
             T5: {
                 text: "GRID",
-                boxed: DTC_Structure["TSD"]["SETTINGS"]["MAP"]["GRID"]
+                boxed: Database["TSD"]["SETTINGS"]["MAP"]["GRID"]
             },
             T6: {
                 text: "SLOPE",
@@ -441,8 +107,8 @@ const page_definitions = {
             }
         });
         
-        if (DTC_Structure["TSD"]["SETTINGS"]["MAP"]["TYPE"] !== "STICK") {
-            if (DTC_Structure["TSD"]["SETTINGS"]["MAP"]["TYPE"] === "DIG") {
+        if (Database["TSD"]["SETTINGS"]["MAP"]["TYPE"] !== "STICK") {
+            if (Database["TSD"]["SETTINGS"]["MAP"]["TYPE"] === "DIG") {
                 ctx.strokeRect(mpdButtons.T6.x + (mpdButtons.T6.width / 2) - (55 / 2) - 15, screen.y + 11, 55, 36);
                 Draw_Special_Text("GRAY", "T4", true, false, 15);
             }
@@ -462,7 +128,7 @@ const page_definitions = {
             Draw_Special_Text("0", "L3", true, false, 0, 12);
             
             Draw_Special_Text("COLOR BAND", "L4", false, false, 0, -12);
-            Draw_Special_Text((DTC_Structure["TSD"]["SETTINGS"]["MAP"]["COLOR_BAND"] === "AC" ? "A/C" : DTC_Structure["TSD"]["SETTINGS"]["MAP"]["COLOR_BAND"]), "L4", true, false, 0, 12);
+            Draw_Special_Text((Database["TSD"]["SETTINGS"]["MAP"]["COLOR_BAND"] === "AC" ? "A/C" : Database["TSD"]["SETTINGS"]["MAP"]["COLOR_BAND"]), "L4", true, false, 0, 12);
             
             Draw_Special_Text("CONTOURS", "L5", false, false, 0, -12);
             Draw_Special_Text("NONE", "L5", true, false, 0, 12);
@@ -476,7 +142,7 @@ const page_definitions = {
         Draw_Menu({
             R3: {
                 text: "CTR",
-                boxed: DTC_Structure["TSD"]["SETTINGS"]["MAP"]["CTR"]
+                boxed: Database["TSD"]["SETTINGS"]["MAP"]["CTR"]
             },
             R4: {
                 text: "FRZ"
@@ -484,7 +150,7 @@ const page_definitions = {
         });
         
         Draw_Special_Text("ORIENT", "R5", false, false, 0, -12);
-        Draw_Special_Text(DTC_Structure["TSD"]["SETTINGS"]["MAP"]["ORIENT"], "R5", true, false, 0, 12);
+        Draw_Special_Text(Database["TSD"]["SETTINGS"]["MAP"]["ORIENT"], "R5", true, false, 0, 12);
         
         Draw_Special_Text("VIEW", "R6", false, false, 0, -12);
         Draw_Special_Text("2D", "R6", true, false, 0, 12);
@@ -492,9 +158,9 @@ const page_definitions = {
     SHOW: function () {
         currentPage = "SHOW";
         button_commands = {...button_commands_empty, ...TSD_Buttons, ...SHOW_Buttons};
-        const phase = DTC_Structure["TSD"]["SETTINGS"]["DEFAULT_PHASE"];
-        const NAV = DTC_Structure["TSD"]["SETTINGS"]["SHOW"]["NAV"];
-        const ATK = DTC_Structure["TSD"]["SETTINGS"]["SHOW"]["ATK"];
+        const phase = Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"];
+        const NAV = Database["TSD"]["SETTINGS"]["SHOW"]["NAV"];
+        const ATK = Database["TSD"]["SETTINGS"]["SHOW"]["ATK"];
 
         Clear_Screen();
         Draw_Screen_Background();
@@ -622,9 +288,9 @@ const page_definitions = {
         currentPage = "COORD_SHOW";
         button_commands = {...button_commands_empty, ...TSD_Buttons, ...SHOW_Buttons, ...COORD_SHOW_Buttons};
 
-        const phase = DTC_Structure["TSD"]["SETTINGS"]["DEFAULT_PHASE"];
-        const NAV = DTC_Structure["TSD"]["SETTINGS"]["SHOW"]["NAV"];
-        const ATK = DTC_Structure["TSD"]["SETTINGS"]["SHOW"]["ATK"];
+        const phase = Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"];
+        const NAV = Database["TSD"]["SETTINGS"]["SHOW"]["NAV"];
+        const ATK = Database["TSD"]["SETTINGS"]["SHOW"]["ATK"];
 
         Clear_Screen();
         Draw_Screen_Background();
@@ -739,9 +405,9 @@ const page_definitions = {
         currentPage = "TSD_POINT";
         button_commands = {...button_commands_empty, ...TSD_Buttons, ...TSD_POINT_Buttons};
         
-        const waypoints = DTC_Structure["TSD"]["WAYPOINTS"];
-        const control_measures = DTC_Structure["TSD"]["CONTROLMEASURES"];
-        const targets = DTC_Structure["TSD"]["TARGETS"];
+        const waypoints = Database["TSD"]["WAYPOINTS"];
+        const control_measures = Database["TSD"]["CONTROLMEASURES"];
+        const targets = Database["TSD"]["TARGETS"];
         let lastPoint = null;
         if (waypoints.length !== 0) {
             lastPoint = "W" + (waypoints.length < 10 ? waypoints.length.toString().padStart(2, "0") : waypoints.length);
@@ -805,7 +471,7 @@ const page_definitions = {
             },
             R3: {
                 text: "CTR",
-                boxed: DTC_Structure["TSD"]["SETTINGS"]["MAP"]["CTR"]
+                boxed: Database["TSD"]["SETTINGS"]["MAP"]["CTR"]
             },
             R4: {
                 text: "FRZ"

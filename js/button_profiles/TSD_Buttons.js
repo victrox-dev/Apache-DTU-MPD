@@ -1,9 +1,9 @@
 const TSD_Buttons = {
     B2: function () {
-        if (DTC_Structure["TSD"]["SETTINGS"]["DEFAULT_PHASE"] === "NAV") {
-            DTC_Structure["TSD"]["SETTINGS"]["DEFAULT_PHASE"] = "ATK";
+        if (Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"] === "NAV") {
+            Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"] = "ATK";
         } else {
-            DTC_Structure["TSD"]["SETTINGS"]["DEFAULT_PHASE"] = "NAV";
+            Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"] = "NAV";
         }
         Load_Page(currentPage);
     },
@@ -17,7 +17,7 @@ const TSD_Buttons = {
         Load_Page("TSD_POINT");
     },
     R3: function () {
-        DTC_Structure["TSD"]["SETTINGS"]["MAP"]["CTR"] = !DTC_Structure["TSD"]["SETTINGS"]["MAP"]["CTR"]; // Boolean flip
+        Database["TSD"]["SETTINGS"]["MAP"]["CTR"] = !Database["TSD"]["SETTINGS"]["MAP"]["CTR"]; // Boolean flip
         Load_Page(currentPage);
     },
     T3: function () {

@@ -1,7 +1,128 @@
-let apacheFont = new FontFace('Apache', 'url(fonts/AH-64D.ttf)');
-apacheFont.load().then(function(font){
-    document.fonts.add(font);
-});
+function MPD_Init(defaultPage = "TSD") {
+    // Create canvas element
+    const body = document.querySelector("body");
+    const canvas = document.createElement("canvas");
+    canvas.setAttribute("height", "860");
+    canvas.setAttribute("width", "880");
+    canvas.id = "mpd";
+    canvas.style.background = "#2e2e2e";
+    body.appendChild(canvas);
+    c = canvas;
+    ctx = c.getContext("2d");
+    
+    // Create input element
+    const input = document.createElement("input");
+    input.id = "KU";
+    input.style.width = "873px";
+    input.style.background = "#000";
+    input.style.color = "#06dd0d";
+    input.style.fontSize = "30px";
+    body.appendChild(document.createElement("br"));
+    body.appendChild(input);
+    KU = input;
+
+    // Create TSD img resources
+    const noDisplayImgDiv = document.createElement("div");
+    noDisplayImgDiv.style.display = "none";
+    body.appendChild(noDisplayImgDiv);
+    // Create Background IMG Elements
+    const TSD_Img_Resources = {
+        TSD_Chart: "img/map_chart.png", TSD_Sat: "img/map_sat.png",
+        TSD_DIG_NRM: "img/map_dig.png", TSD_DIG_AC: "img/dig_ac.png",
+        TSD_DIG_ELEV: "img/dig_elev.png", TSD_Ownship: "img/TSD_Ownship.svg",
+        TSD_CompassRose: "img/TSD_CompassRose.svg"
+    };
+    for (let BG in TSD_Img_Resources) {
+        const imgElement = document.createElement("img");
+        imgElement.id = BG;
+        imgElement.src = TSD_Img_Resources[BG];
+        noDisplayImgDiv.appendChild(imgElement);
+        window[`${BG}`] = imgElement;
+    }
+    
+    // MPD Buttons
+    const specialButtons = {TSD: null, COM: null, FCR: null, VID: null, AC: null, WPN: null, B1: "M"};
+    for (let button in mpdButtons) { // Draw buttons
+        if (typeof specialButtons[button] !== "undefined") {
+            const text = (button === "AC" ? "A/C" : (button === "B1" ? "M" : button));
+            ctx.fillStyle = "#141414"; // Button color
+            ctx.fillRect(mpdButtons[button].x, mpdButtons[button].y, mpdButtons[button].width, mpdButtons[button].height);
+            ctx.fillStyle = "#fff";
+            ctx.font = "30px Monospace, Monospace";
+            const textHeight = ctx.measureText(text).actualBoundingBoxAscent;
+            const textWidth = ctx.measureText(text).width;
+            ctx.fillText(text, mpdButtons[button].x + ((mpdButtons[button].width - textWidth) / 2), mpdButtons[button].y + (40 - textHeight / 2));
+        } else {
+            ctx.fillStyle = "#889bab"; // Button color
+            ctx.fillRect(mpdButtons[button].x, mpdButtons[button].y, mpdButtons[button].width, mpdButtons[button].height);
+            ctx.fillStyle = "#fff"; // Button circle color
+            ctx.beginPath();
+            ctx.arc(mpdButtons[button].x + 20, mpdButtons[button].y + 20, 5, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+    }
+
+    // Create event for clicks on MPD buttons
+    c.addEventListener('click', function(evt) {
+        let mousePos = getMousePos(c, evt);
+
+        for (let button in mpdButtons) {
+            if (isInside(mousePos, mpdButtons[button])) {
+                button_commands[button]();
+                lastButton = button;
+                break;
+            }
+        }
+
+        if (inputReady) {
+            if (isInside(mousePos, {x: screen.x + (screen.w / 2) / 2, y: screen.y + (screen.h / 2) - 20, width: screen.w / 2, height: 40})) {
+                // KU.focus();
+            }
+        }
+    }, false);
+
+    // Draw button lines T1 thru T6
+    for (let i = 1; i <= 6; i++) {
+        ctx.beginPath();
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 2;
+        ctx.moveTo(mpdButtons["T" + i.toString()].x + 20, mpdButtons["T" + i.toString()].y + 42);
+        ctx.lineTo(mpdButtons["T" + i.toString()].x + 20, screen.y);
+        ctx.stroke();
+    }
+
+    // Draw button lines L1 thru L6
+    for (let i = 1; i <= 6; i++) {
+        ctx.beginPath();
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 2;
+        ctx.moveTo(mpdButtons["L" + i.toString()].x + 42, mpdButtons["L" + i.toString()].y + 20);
+        ctx.lineTo(screen.x, mpdButtons["L" + i.toString()].y + 20);
+        ctx.stroke();
+    }
+
+    // Draw button lines R1 thru R6
+    for (let i = 1; i <= 6; i++) {
+        ctx.beginPath();
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 2;
+        ctx.moveTo(mpdButtons["R" + i.toString()].x - 2, mpdButtons["R" + i.toString()].y + 20);
+        ctx.lineTo(screen.x + screen.w, mpdButtons["R" + i.toString()].y + 20);
+        ctx.stroke();
+    }
+
+    // Draw button lines B1 thru B6
+    for (let i = 1; i <= 6; i++) {
+        ctx.beginPath();
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 2;
+        ctx.moveTo(mpdButtons["B" + i.toString()].x + 20, mpdButtons["B" + i.toString()].y - 2);
+        ctx.lineTo(mpdButtons["B" + i.toString()].x + 20, screen.y + screen.h);
+        ctx.stroke();
+    }
+    
+    Load_Page(defaultPage); // Load the specified page
+}
 
 function debug_centerline() {
     ctx.beginPath();
@@ -13,23 +134,23 @@ function debug_centerline() {
 function Clear_Screen() {
     ctx.clearRect(screen.x, screen.y, screen.w, screen.h);
 }
+
 function Draw_Screen_Background() {
-    const mapType = DTC_Structure["TSD"]["SETTINGS"]["MAP"]["TYPE"];
-    const colorBand = DTC_Structure["TSD"]["SETTINGS"]["MAP"]["COLOR_BAND"];
-    // const mapCTR = DTC_Structure["TSD"]["SETTINGS"]["MAP"]["CTR"];
+    const mapType = Database["TSD"]["SETTINGS"]["MAP"]["TYPE"];
+    const colorBand = Database["TSD"]["SETTINGS"]["MAP"]["COLOR_BAND"];
     ctx.globalCompositeOperation = 'destination-over';
     Draw_TSD_Grid();
     if (mapType === "CHART") {
-        ctx.drawImage(map_chart, screen.x, screen.y, 670, 670);
+        ctx.drawImage(TSD_Chart, screen.x, screen.y, 670, 670);
     } else if (mapType === "SAT") {
-        ctx.drawImage(map_sat, screen.x, screen.y, 670, 670);
+        ctx.drawImage(TSD_Sat, screen.x, screen.y, 670, 670);
     } else if (mapType === "DIG") {
         if (colorBand === "NONE") {
-            ctx.drawImage(map_dig, screen.x, screen.y, 670, 670);
+            ctx.drawImage(TSD_DIG_NRM, screen.x, screen.y, 670, 670);
         } else if (colorBand === "AC") {
-            ctx.drawImage(map_dig_ac, screen.x, screen.y, 670, 670);
+            ctx.drawImage(TSD_DIG_AC, screen.x, screen.y, 670, 670);
         } else if (colorBand === "ELEV") {
-            ctx.drawImage(map_dig_elev, screen.x, screen.y, 670, 670);
+            ctx.drawImage(TSD_DIG_ELEV, screen.x, screen.y, 670, 670);
         }
     }
     ctx.fillStyle = "#000";
@@ -137,7 +258,7 @@ function Draw_TSD_Bottom_Menu(tsdBoxed = false, mapBoxed = false, routeBoxed = f
     Draw_Special_Text("TSD", "B1", tsdBoxed);
 
     Draw_Special_Text("PHASE", "B2", false, false, 0, -20);
-    Draw_Special_Text(DTC_Structure["TSD"]["SETTINGS"]["DEFAULT_PHASE"], "B2", true);
+    Draw_Special_Text(Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"], "B2", true);
 
     Draw_Special_Text("BAM", "B3", false, true, -10);
 
@@ -158,12 +279,12 @@ function Draw_TSD_Bottom_Menu(tsdBoxed = false, mapBoxed = false, routeBoxed = f
 }
 
 function Draw_TSD_Grid() {
-    if (!DTC_Structure["TSD"]["SETTINGS"]["MAP"]["GRID"]) {
+    if (!Database["TSD"]["SETTINGS"]["MAP"]["GRID"]) {
         return null;
     }
 
     ctx.lineWidth = 1;
-    if (DTC_Structure["TSD"]["SETTINGS"]["MAP"]["TYPE"] === "STICK") {
+    if (Database["TSD"]["SETTINGS"]["MAP"]["TYPE"] === "STICK") {
         ctx.strokeStyle = "#039309";
     } else {
         ctx.strokeStyle = "#000";
@@ -190,22 +311,22 @@ function Draw_TSD_Grid() {
 }
 
 function Draw_TSD_HSI() {
-    const currentPhase = DTC_Structure["TSD"]["SETTINGS"]["DEFAULT_PHASE"];
-    if (!DTC_Structure["TSD"]["SETTINGS"]["SHOW"][currentPhase]["HSI"]) {
+    const currentPhase = Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"];
+    if (!Database["TSD"]["SETTINGS"]["SHOW"][currentPhase]["HSI"]) {
         return null;
     }
-    if (DTC_Structure["TSD"]["SETTINGS"]["MAP"]["CTR"]) {
-        ctx.drawImage(TSD_compassrose, screen.x + screen.w / 2 - (350 / 2), (screen.y + screen.h / 2) - (350 / 2), 350, 350);
+    if (Database["TSD"]["SETTINGS"]["MAP"]["CTR"]) {
+        ctx.drawImage(TSD_CompassRose, screen.x + screen.w / 2 - (350 / 2), (screen.y + screen.h / 2) - (350 / 2), 350, 350);
     } else {
-        ctx.drawImage(TSD_compassrose, screen.x + screen.w / 2 - (350 / 2), (screen.y + screen.h / 2 + 138) - (350 / 2), 350, 350);
+        ctx.drawImage(TSD_CompassRose, screen.x + screen.w / 2 - (350 / 2), (screen.y + screen.h / 2 + 138) - (350 / 2), 350, 350);
     }
 }
 
 function Draw_TSD_Ownship() {
-    if (DTC_Structure["TSD"]["SETTINGS"]["MAP"]["CTR"]) {
-        ctx.drawImage(TSD_ownship, screen.x + screen.w / 2 - 25, screen.y + screen.h / 2 - 16, 50, 50); // -16 to get center dot of icon
+    if (Database["TSD"]["SETTINGS"]["MAP"]["CTR"]) {
+        ctx.drawImage(TSD_Ownship, screen.x + screen.w / 2 - 25, screen.y + screen.h / 2 - 16, 50, 50); // -16 to get center dot of icon
     } else {
-        ctx.drawImage(TSD_ownship, screen.x + screen.w / 2 - 25, (screen.y + screen.h / 2 + 138) - 16, 50, 50); // 138 is grid spacing
+        ctx.drawImage(TSD_Ownship, screen.x + screen.w / 2 - 25, (screen.y + screen.h / 2 + 138) - 16, 50, 50); // 138 is grid spacing
     }
 
     Draw_TSD_HSI();
@@ -267,6 +388,7 @@ function Fit_Text_To_Bounds(text, bounds, recursionAmplifier = 0) {
         return Fit_Text_To_Bounds(text.substring(recursionAmplifier, text.length), bounds, recursionAmplifier += 1);
     }
 }
+
 function Draw_User_Input_Dialog(){
     ctx.font = "22px Apache"; // Define this here so we can get textWidth
     const kuText = document.getElementById("KU").value;
@@ -292,14 +414,11 @@ function Draw_TSD_Point_Data() {
     const measuredText = ctx.measureText("W");
     const boxWidth = 500;
     const rectBeginX = (screen.x + screen.w / 2) - boxWidth / 2;
-    const rectBeginY = screen.y + screen.h - 150; // -20 accounting for height / 2
+    const rectBeginY = screen.y + screen.h - 150;
 
-    const waypoints = DTC_Structure["TSD"]["WAYPOINTS"];
-    const control_measures = DTC_Structure["TSD"]["CONTROLMEASURES"];
-    const targets = DTC_Structure["TSD"]["TARGETS"];
-        // lastPoint = "W" + (waypoints.length < 10 ? waypoints.length.toString().padStart(2, "0") : waypoints.length);
-        // lastPoint = "C" + (control_measures.length + 50).toString();
-        // lastPoint = "T" + (targets.length < 10 ? targets.length.toString().padStart(2, "0") : targets.length);
+    const waypoints = Database["TSD"]["WAYPOINTS"];
+    const control_measures = Database["TSD"]["CONTROLMEASURES"];
+    const targets = Database["TSD"]["TARGETS"];
     ctx.roundRect(rectBeginX, rectBeginY, boxWidth, 80, 10);
     ctx.fillStyle = "#000";
     ctx.strokeStyle = "#06dd0d";
