@@ -30,7 +30,7 @@ function MPD_Init(defaultPage = "Menu") {
         TSD_Chart: "img/map_chart.png", TSD_Sat: "img/map_sat.png",
         TSD_DIG_NRM: "img/map_dig.png", TSD_DIG_AC: "img/dig_ac.png",
         TSD_DIG_ELEV: "img/dig_elev.png", TSD_Ownship: "img/TSD_Ownship.svg",
-        TSD_CompassRose: "img/TSD_CompassRose.svg"
+        TSD_CompassRose: "img/TSD_CompassRose.svg", button_arrow: "img/arrow.png"
     };
     for (let BG in TSD_Img_Resources) {
         const imgElement = document.createElement("img");
@@ -188,6 +188,8 @@ function Draw_Arrow(xStart, yStart, xLen) {
     ctx.font = "16px Monospace, Monospace";
     ctx.fillStyle = "#06dd0d";
     ctx.fillText("\u{1F83A}", xStart + xLen - 2, yStart + 6);
+    ctx.fillStyle
+    ctx.drawImage(button_arrow, 10, 10, 356, 10);
 }
 
 function Draw_Text(text, x, y, fontSize) {

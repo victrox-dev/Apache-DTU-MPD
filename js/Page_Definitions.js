@@ -471,8 +471,7 @@ const page_definitions = {
         // R1/R2 Bullshit END
         
         // Phase Identifier START
-        let text = null;
-        let textWidth = null;
+        let text, textWidth;
         ctx.font = "17px Apache";
         if (phase === "NAV") {
             text = "NAVIGATION PHASE";
