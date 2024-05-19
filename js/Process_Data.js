@@ -11,15 +11,29 @@ let validateInput = function () {
     return true;
 }
 
+function inputBlink() {
+    if (!blinking) {
+        const rectBeginX = screen.x + (screen.w / 2) / 2;
+        const rectBeginY = screen.y + (screen.h / 2) - 36 / 2;
+        ctx.beginPath();
+        ctx.fillStyle = "black";
+        ctx.roundRect(rectBeginX + 4, rectBeginY, screen.w / 2 - 8, 36, 10);
+        ctx.fill();
+    } else {
+        Draw_User_Input_Dialog();
+    }
+    blinking = !blinking;
+}
+
 function Process_Data() {
     if (!numVars) {
         return null;
     }
     
     if (!validateInput()) {
-        ctx.fillStyle = "red";
-        ctx.fillRect(screen.x + 125, screen.y + screen.w / 2 - (25 / 2), 25, 25);
-        return null; // TODO: Add some sort of feedback indication (why did validation fail)
+        inputBlink(); // Call once immediately otherwise we wait 500ms for first blink
+        dialog = setInterval(inputBlink, 500);
+        return null;
     }
     
     tempData[tempData.length - numVars] = KU.value.toUpperCase();
@@ -37,9 +51,10 @@ function Process_Data() {
         inputReady = false;
         tempData = null;
         Load_Page(returnTo);
+        returnTo = null;
         updateScreen = function () { return null };
         storeData = function () { return null };
-        returnTo = null;
+        validateInput = function () { return true };
         return null;
     }
 }

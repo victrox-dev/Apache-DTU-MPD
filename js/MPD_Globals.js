@@ -10,6 +10,10 @@ apacheFont.load().then(function (font) {
 // TSD Variables
 let pointIndex = null;
 
+// COM Variables
+let presetSelected = null;
+let freqSelected = null;
+
 // Input Variables
 let inputPrompt, returnTo = null;
 let tempData = [];
@@ -23,7 +27,8 @@ let dialog = null;
 const scripts = ["js/Drawing_Functions.js", "js/Page_Definitions.js",
     "js/Process_Data.js", "js/button_profiles/TSD_Buttons.js",
     "js/button_profiles/TSD_POINT_Buttons.js", "js/button_profiles/MAP_Buttons.js",
-    "js/button_profiles/SHOW_Buttons.js", "js/button_profiles/Menu_Buttons.js"
+    "js/button_profiles/SHOW_Buttons.js", "js/button_profiles/Menu_Buttons.js",
+    "js/button_profiles/COM_Buttons.js"
 ];
 
 // Button Related Variables
@@ -61,7 +66,179 @@ for (let i = 0; i < scripts.length; i++) {
 
 // DTC Structure/Database
 let Database = {
-    TSD:{
+    COM: {
+        Preset1: {
+            default: true, // TODO: This will need to be deleted on storeData()
+            UNIT_ID: "PRESET 1",
+            CALLSIGN: "PRE 1",
+            VHF: "127.5",
+            UHF: "225",
+            UHF_Cipher: false,
+            UHF_CNV: "1",
+            FM1: "30",
+            FM1_Cipher: false,
+            FM1_CNV: "1",
+            FM2: "30",
+            FM2_Cipher: false,
+            FM2_CNV: "1",
+            PRI_FREQ: "VHF",
+        },
+        Preset2: {
+            default: true,
+            UNIT_ID: "PRESET 2",
+            CALLSIGN: "PRE 2",
+            VHF: "127.5",
+            UHF: "225",
+            UHF_Cipher: false,
+            UHF_CNV: "1",
+            FM1: "30",
+            FM1_Cipher: false,
+            FM1_CNV: "1",
+            FM2: "30",
+            FM2_Cipher: false,
+            FM2_CNV: "1",
+            PRI_FREQ: "NONE",
+        },
+        Preset3: {
+            default: true,
+            UNIT_ID: "PRESET 3",
+            CALLSIGN: "PRE 3",
+            VHF: "127.5",
+            UHF: "225",
+            UHF_Cipher: false,
+            UHF_CNV: "1",
+            FM1: "30",
+            FM1_Cipher: false,
+            FM1_CNV: "1",
+            FM2: "30",
+            FM2_Cipher: false,
+            FM2_CNV: "1",
+            PRI_FREQ: "FM1",
+        },
+        Preset4: {
+            default: true,
+            UNIT_ID: "PRESET 4",
+            CALLSIGN: "PRE 4",
+            VHF: "127.5",
+            UHF: "225",
+            UHF_Cipher: false,
+            UHF_CNV: "1",
+            FM1: "30",
+            FM1_Cipher: false,
+            FM1_CNV: "1",
+            FM2: "30",
+            FM2_Cipher: false,
+            FM2_CNV: "1",
+            PRI_FREQ: "FM2",
+        },
+        Preset5: {
+            default: true,
+            UNIT_ID: "PRESET 5",
+            CALLSIGN: "PRE 5",
+            VHF: "127.5",
+            UHF: "225",
+            UHF_Cipher: false,
+            UHF_CNV: "1",
+            FM1: "30",
+            FM1_Cipher: false,
+            FM1_CNV: "1",
+            FM2: "30",
+            FM2_Cipher: false,
+            FM2_CNV: "1",
+            PRI_FREQ: "NONE",
+        },
+        Preset6: {
+            default: true,
+            UNIT_ID: "PRESET 6",
+            CALLSIGN: "PRE 6",
+            VHF: "127.5",
+            UHF: "225",
+            UHF_Cipher: false,
+            UHF_CNV: "1",
+            FM1: "30",
+            FM1_Cipher: false,
+            FM1_CNV: "1",
+            FM2: "30",
+            FM2_Cipher: false,
+            FM2_CNV: "1",
+            PRI_FREQ: "NONE",
+        },
+        Preset7: {
+            default: true,
+            UNIT_ID: "PRESET 7",
+            CALLSIGN: "PRE 7",
+            VHF: "127.5",
+            UHF: "225",
+            UHF_Cipher: false,
+            UHF_CNV: "1",
+            FM1: "30",
+            FM1_Cipher: false,
+            FM1_CNV: "1",
+            FM2: "30",
+            FM2_Cipher: false,
+            FM2_CNV: "1",
+            PRI_FREQ: "NONE",
+        },
+        Preset8: {
+            default: true,
+            UNIT_ID: "PRESET 8",
+            CALLSIGN: "PRE 8",
+            VHF: "127.5",
+            UHF: "225",
+            UHF_Cipher: false,
+            UHF_CNV: "1",
+            FM1: "30",
+            FM1_Cipher: false,
+            FM1_CNV: "1",
+            FM2: "30",
+            FM2_Cipher: false,
+            FM2_CNV: "1",
+            PRI_FREQ: "NONE",
+        },
+        Preset9: {
+            default: true,
+            UNIT_ID: "PRESET 9",
+            CALLSIGN: "PRE 9",
+            VHF: "127.5",
+            UHF: "225",
+            UHF_Cipher: false,
+            UHF_CNV: "1",
+            FM1: "30",
+            FM1_Cipher: false,
+            FM1_CNV: "1",
+            FM2: "30",
+            FM2_Cipher: false,
+            FM2_CNV: "1",
+            PRI_FREQ: "NONE",
+        },
+        Preset10: {
+            default: true,
+            UNIT_ID: "PRESET 10",
+            CALLSIGN: "PRE 10",
+            VHF: "127.5",
+            UHF: "225",
+            UHF_Cipher: false,
+            UHF_CNV: "1",
+            FM1: "30",
+            FM1_Cipher: false,
+            FM1_CNV: "1",
+            FM2: "30",
+            FM2_Cipher: false,
+            FM2_CNV: "1",
+            PRI_FREQ: "NONE",
+        },
+        XPNDR: {
+            Mode1: "00",
+            Mode3: "1200",
+            Mode4: true
+        },
+        DL: {
+            CALLSIGN: "G-1",
+            ORIG_ID: "1"
+        },
+        HF: "2.0"
+    },
+    TSD: {
         WAYPOINTS: [
 
         ],
@@ -125,13 +302,13 @@ let Database = {
 // Basic empty button commands for overwriting later
 const button_commands_empty = {
     L1: function (){},    L2: function (){},    L3: function (){},    L4: function (){},
-    L5: function (){},    L6: function (){},    B1: function (){Load_Page("Menu");},    B2: function (){},
+    L5: function (){},    L6: function (){},    B1: function (){ Load_Page("Menu"); },    B2: function (){},
     B3: function (){},    B4: function (){},    B5: function (){},    B6: function (){},
     R1: function (){},    R2: function (){},    R3: function (){},    R4: function (){},
     R5: function (){},    R6: function (){},    T6: function (){},    T5: function (){},
     T4: function (){},    T3: function (){},    T2: function (){},    T1: function (){},
-    FCR: function (){},   WPN: function (){},   TSD: function (){Load_Page("TSD");},   VID: function (){},
-    COM: function (){},   AC: function (){}
+    FCR: function (){},   WPN: function (){},   TSD: function (){ Load_Page("TSD"); },   VID: function (){},
+    COM: function (){ Load_Page("COM_BASE"); },   AC: function (){}
 };
 
 // Button Positions

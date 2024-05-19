@@ -656,5 +656,300 @@ const page_definitions = {
         Draw_TSD_Point_Data();
         
         Draw_TSD_Bottom_Menu(false, false, false, true);
+    },
+    COM_BASE: function () {
+        currentPage = "COM_BASE";
+        button_commands = {...button_commands_empty, ...COM_BASE_Buttons};
+        const presetButtons = [
+            "L1", "L2", "L3", "L4", "L5",
+            "R1", "R2", "R3", "R4", "R5"
+        ];
+        const freqButtons = [
+            "T1", "T2", "T3", "T4", "T5"
+        ];
+        
+        Clear_Screen();
+        Draw_Screen_Background();
+        
+        const boxPreset = function () {
+            if (!presetSelected) {
+                return false;
+            }
+            
+            for (let i = 0; i < presetButtons.length; i++) {
+                if (presetButtons[i] === presetSelected) {
+                    ctx.save();
+                    const xStart = (presetSelected.search("R") > -1 ? screen.x + screen.w - 145 - ctx.lineWidth : screen.x + ctx.lineWidth / 2);
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = "#06dd0d";
+                    ctx.strokeRect(xStart, mpdButtons[presetSelected].y - 5, 145, 45);
+                    ctx.restore();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        if (boxPreset()) {
+            const bottomMenuWidth = (mpdButtons.T6.x + 40) - (mpdButtons.T1.x - 40);
+            Draw_Options_Box(mpdButtons.T1.x - 20, screen.y, bottomMenuWidth, 48, "top", "RADIO");
+            Draw_Menu({
+                T1: {
+                    text: "VHF",
+                    boxed: (lastButton === "T1")
+                },
+                T2: {
+                    text: "UHF",
+                    boxed: (lastButton === "T2")
+                },
+                T3: {
+                    text: "FM1",
+                    boxed: (lastButton === "T3")
+                },
+                T4: {
+                    text: "FM2",
+                    boxed: (lastButton === "T4")
+                },
+                T5: {
+                    text: "HF",
+                    boxed: (lastButton === "T5")
+                },
+                B1: {
+                    text: "COM",
+                    boxed: true
+                },
+                B2: {
+                    text: "MAN",
+                    arrow: true
+                },
+                B4: {
+                    text: "NET",
+                    arrow: true
+                },
+                B6: {
+                    text: "PRESET",
+                    arrow: true,
+                    yDeviation: -20
+                }
+            });
+            
+            Draw_Menu({
+                B6: {
+                    text: "EDIT"
+                }
+            });
+            
+            button_commands = {...button_commands_empty, ...COM_BASE_Buttons, ...COM_BASE_Preset};
+        } else {
+            const bottomMenuWidth = (mpdButtons.B6.x + 40) - (mpdButtons.B5.x - 40);
+            Draw_Options_Box(mpdButtons.B5.x - 20, screen.y + screen.h - 48, bottomMenuWidth, 48, "bottom", "MSG");
+            Draw_Menu({
+                T1: {
+                    text: "DAY"
+                },
+                T2: {
+                    text: "DL",
+                    arrow: true
+                },
+                T3: {
+                    text: "XPNDR",
+                    arrow: true
+                },
+                T4: {
+                    text: "UHF",
+                    arrow: true
+                },
+                T5: {
+                    text: "FM",
+                    arrow: true
+                },
+                T6: {
+                    text: "HF",
+                    arrow: true
+                },
+                B1: {
+                    text: "COM",
+                    boxed: true
+                },
+                B2: {
+                    text: "MAN",
+                    arrow: true
+                },
+                B3: {
+                    text: "FALL",
+                    yDeviation: -20
+                },
+                B4: {
+                    text: "ORIG",
+                    arrow: true,
+                    yDeviation: -20
+                },
+                B6: {
+                    text: "SEND",
+                    arrow: true
+                }
+            });
+            
+            Draw_Menu({
+                T1: {
+                    text: "1",
+                    boxed: true,
+                    yDeviation: 20
+                },
+                B3: {
+                    text: "BACK"
+                },
+                B4: {
+                    text: "ID"
+                }
+            });
+            
+            let currentPos = 30;
+            const drawCenterText = function (text, alignment = null) {
+                ctx.save();
+                ctx.font = "17px Apache";
+                ctx.fillStyle = "#06dd0d";
+                const measuredText = ctx.measureText(text);
+                if (alignment === "left") {
+                    ctx.fillText(text, boxPos.x + ctx.lineWidth + 5, boxPos.y + currentPos);
+                } else { // assume center
+                    ctx.fillText(text, (boxPos.x + boxWidth / 2) - (measuredText.width / 2), boxPos.y + currentPos);
+                }
+                ctx.restore();
+                currentPos += 20;
+            };
+            // Draw center box with preset info bullshit
+            ctx.save();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "#06dd0d";
+            const boxWidth = 250;
+            const boxHeight = 400;
+            const boxPos = { x: screen.x + screen.w / 2 - boxWidth / 2, y: mpdButtons.L2.y };
+            ctx.beginPath();
+            ctx.roundRect(boxPos.x, boxPos.y, boxWidth, boxHeight, 10)
+            ctx.stroke();
+            
+            drawCenterText("OWNSHIP");
+            drawCenterText(Database["COM"]["DL"]["CALLSIGN"]);
+            currentPos += 10;
+            drawCenterText("DL: " + Database["COM"]["DL"]["ORIG_ID"], "left");
+            drawCenterText("TF: ? ? ?", "left");
+            drawCenterText("TI: 00000000", "left");
+            drawCenterText("FS: 00000000", "left");
+            drawCenterText("FIRE SUPPORT:", "left");
+            drawCenterText(" IP    ?", "left");
+            drawCenterText(" MASK   ?", "left");
+            currentPos += 5;
+            drawCenterText(" ACCESS RANK     0", "left");
+            drawCenterText(" TOTAL STATION    0", "left");
+            drawCenterText(" STATION ID      0", "left");
+            currentPos += 10;
+            drawCenterText("UTO: ?", "left");
+            ctx.restore();
+        }
+
+        // TODO: Re-do the below with for loop (later problem)
+        Draw_Menu({
+            L1: {
+                text: "       L1",
+                yDeviation: -10
+            },
+            L2: {
+                text: "       L2",
+                yDeviation: -10
+            },
+            L3: {
+                text: "       L3",
+                yDeviation: -10
+            },
+            L4: {
+                text: "       L4",
+                yDeviation: -10
+            },
+            L5: {
+                text: "       L5",
+                yDeviation: -10
+            },
+            L6: {
+                text: "PRESET",
+                arrow: true,
+                yDeviation: -10
+            },
+            R6: {
+                text: "XPNDR MASTER",
+                yDeviation: -10
+            }
+        });
+        
+        Draw_Menu({
+            L1: {
+                text: Database["COM"]["Preset1"]["UNIT_ID"],
+                yDeviation: -10
+            },
+            L2: {
+                text: Database["COM"]["Preset2"]["UNIT_ID"],
+                yDeviation: -10
+            },
+            L3: {
+                text: Database["COM"]["Preset3"]["UNIT_ID"],
+                yDeviation: -10
+            },
+            L4: {
+                text: Database["COM"]["Preset4"]["UNIT_ID"],
+                yDeviation: -10
+            },
+            L5: {
+                text: Database["COM"]["Preset5"]["UNIT_ID"],
+                yDeviation: -10
+            },
+            L6: {
+                text: "DIR",
+                yDeviation: 10
+            },
+            R1: {
+                text: Database["COM"]["Preset6"]["UNIT_ID"] + " L6",
+                yDeviation: -10
+            },
+            R2: {
+                text: Database["COM"]["Preset7"]["UNIT_ID"] + " L7",
+                yDeviation: -10
+            },
+            R3: {
+                text: Database["COM"]["Preset8"]["UNIT_ID"] + " L8",
+                yDeviation: -10
+            },
+            R4: {
+                text: Database["COM"]["Preset9"]["UNIT_ID"],
+                yDeviation: -10
+            },
+            R5: {
+                text: Database["COM"]["Preset10"]["UNIT_ID"],
+                yDeviation: -10
+            },
+            R6: {
+                text: "NORM",
+                boxed: true,
+                yDeviation: 10
+            }
+        });
+        
+        // TODO: This text is based on tuned frequencies; need to implement tuning on DCS modification-end to properly utilize this in web interface
+        // Draw Lower Offset Text
+        // Draw_Menu({
+        //     L1: {
+        //         text: (Database["COM"]["Preset1"]["PRI_FREQ"] === "NONE" ? "" : Database["COM"]["Preset1"]["PRI_FREQ"]),
+        //         yDeviation: 10
+        //     },
+        //     L2: {
+        //         text: (Database["COM"]["Preset2"]["PRI_FREQ"] === "NONE" ? "" : Database["COM"]["Preset2"]["PRI_FREQ"]),
+        //         yDeviation: 10
+        //     },
+        //     L3: {
+        //         text: (Database["COM"]["Preset3"]["PRI_FREQ"] === "NONE" ? "" : Database["COM"]["Preset3"]["PRI_FREQ"]),
+        //         yDeviation: 10
+        //     }
+        // });
+        
+        
     }
 };

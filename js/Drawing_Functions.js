@@ -1,4 +1,4 @@
-function MPD_Init(defaultPage = "Menu") {
+function MPD_Init(defaultPage = "COM_BASE") {
     // Create canvas element
     const body = document.querySelector("body");
     const canvas = document.createElement("canvas");
@@ -67,6 +67,10 @@ function MPD_Init(defaultPage = "Menu") {
         } else {
             if (inputReady) {
                 Draw_User_Input_Dialog();
+                if (dialog != null) {
+                    clearInterval(dialog);
+                    dialog = null;
+                }
             }
         }
     });
@@ -77,8 +81,14 @@ function MPD_Init(defaultPage = "Menu") {
 
         for (let button in mpdButtons) {
             if (isInside(mousePos, mpdButtons[button])) {
-                button_commands[button]();
                 lastButton = button;
+                // TODO: Reset selected preset variable on com page... probably need to move this to somewhere else
+                // TODO: Realistically, all variables need a reset on page change... so this probably needs to be a function
+                if (currentPage.search("COM") === -1) {
+                    presetSelected = null;
+                    freqSelected = null;
+                }
+                button_commands[button]();
                 break;
             }
         }
@@ -396,6 +406,8 @@ function Draw_Options_Box(x, y, w, h, align = "left", prompt = "options") {
             Draw_Text(prompt[i], (x + (ctx.lineWidth / 2) - textWidth) - xAlign, boxCenter.y + (i * 14), 17);
         } else if (align === "bottom") {
             Draw_Text(prompt, x + w / 2 - (ctx.measureText(prompt).width / 2), y + ctx.measureText(prompt).fontBoundingBoxAscent / 2, 17);
+        } else if (align === "top") {
+            Draw_Text(prompt, x + w / 2 - (ctx.measureText(prompt).width / 2), y + h + ctx.lineWidth + ctx.measureText(prompt).fontBoundingBoxAscent / 2, 17);
         }
     }
 }
