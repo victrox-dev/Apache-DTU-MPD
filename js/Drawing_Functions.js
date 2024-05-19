@@ -33,8 +33,7 @@ function MPD_Init(defaultPage = "Menu") {
         TSD_CompassRose: "img/TSD_CompassRose.svg"
     };
     for (let BG in TSD_Img_Resources) {
-        const imgElement = document.createElement("img");
-        // imgElement.id = BG;
+        const imgElement = new Image(); //document.createElement("img");
         imgElement.src = TSD_Img_Resources[BG];
         noDisplayImgDiv.appendChild(imgElement);
         window[`${BG}`] = imgElement;
