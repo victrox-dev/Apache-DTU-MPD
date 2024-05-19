@@ -30,11 +30,11 @@ function MPD_Init(defaultPage = "Menu") {
         TSD_Chart: "img/map_chart.png", TSD_Sat: "img/map_sat.png",
         TSD_DIG_NRM: "img/map_dig.png", TSD_DIG_AC: "img/dig_ac.png",
         TSD_DIG_ELEV: "img/dig_elev.png", TSD_Ownship: "img/TSD_Ownship.svg",
-        TSD_CompassRose: "img/TSD_CompassRose.svg", button_arrow: "img/arrow.png"
+        TSD_CompassRose: "img/TSD_CompassRose.svg"
     };
     for (let BG in TSD_Img_Resources) {
         const imgElement = document.createElement("img");
-        imgElement.id = BG;
+        // imgElement.id = BG;
         imgElement.src = TSD_Img_Resources[BG];
         noDisplayImgDiv.appendChild(imgElement);
         window[`${BG}`] = imgElement;
@@ -61,6 +61,16 @@ function MPD_Init(defaultPage = "Menu") {
             ctx.fill();
         }
     }
+    
+    KU.addEventListener('keyup', function (evt) {
+        if (evt.key === "Enter") {
+            Process_Data();
+        } else {
+            if (inputReady) {
+                Draw_User_Input_Dialog();
+            }
+        }
+    });
 
     // Create event for clicks on MPD buttons
     c.addEventListener('click', function(evt) {
@@ -76,7 +86,7 @@ function MPD_Init(defaultPage = "Menu") {
 
         if (inputReady) {
             if (isInside(mousePos, {x: screen.x + (screen.w / 2) / 2, y: screen.y + (screen.h / 2) - 20, width: screen.w / 2, height: 40})) {
-                // KU.focus();
+                KU.focus();
             }
         }
     }, false);
@@ -164,15 +174,9 @@ function Draw_Screen_Background() {
     ctx.fillStyle = "#000";
     ctx.fillRect(screen.x, screen.y, screen.w, screen.h);
     ctx.globalCompositeOperation = 'source-over';
-
-    // if (!inputReady) { // Clear KU if page changed
-    //     KU.value = null;
-    //     numVars = 0;
-    // }
 }
 
 function Load_Page(page, variable = null) {
-    // ctx.clearRect(110, 125, 670, 670); // Clear screen
     Draw_Screen_Background(); // Draw basic black screen background
     page_definitions[page](variable);
 }
@@ -182,14 +186,15 @@ function Draw_Arrow(xStart, yStart, xLen) {
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(xStart, yStart);
-    ctx.lineTo(xStart + xLen, yStart);
-    ctx.stroke();
+    ctx.lineTo(xStart + xLen + 2, yStart);
+    for (let i = 0; i < 3; i++) {
+        ctx.stroke(); // Drawing line a few times to make it clearly defined
+    }
 
     ctx.font = "16px Monospace, Monospace";
     ctx.fillStyle = "#06dd0d";
-    ctx.fillText("\u{1F83A}", xStart + xLen - 2, yStart + 6);
+    ctx.fillText("\u{1F83A}", xStart + xLen, yStart + 6);
     ctx.fillStyle
-    ctx.drawImage(button_arrow, 10, 10, 356, 10);
 }
 
 function Draw_Text(text, x, y, fontSize) {
@@ -230,8 +235,6 @@ function Draw_Special_Text(text, button, boxed = false, arrow = false, xDeviatio
 
     ctx.fillStyle = "#06dd0d";
     ctx.fillText(text, x, y);
-    // ctx.fillText(text, x+0.5, y+0.5);
-    // ctx.fillText(text, x-0.5, y-0.5);
 
     if (boxed) {
         ctx.strokeStyle = "#06dd0d";
@@ -299,7 +302,6 @@ function Draw_TSD_Grid() {
     } else {
         ctx.strokeStyle = "#000";
     }
-    
 
     // VERTICAL
     for (let i = screen.x + 60; i <= 805; i += 138) {
@@ -410,7 +412,6 @@ function Fit_Text_To_Bounds(text, bounds, recursionAmplifier = 0) {
         return Fit_Text_To_Bounds(text.substring(recursionAmplifier, text.length), bounds, recursionAmplifier += 1);
     }
 }
-
 function Draw_User_Input_Dialog(){
     ctx.font = "22px Apache"; // Define this here so we can get textWidth
     const kuText = document.getElementById("KU").value;
@@ -430,6 +431,14 @@ function Draw_User_Input_Dialog(){
     
     ctx.fillStyle = "#06dd0d"; // MPD green
     ctx.fillText(Fit_Text_To_Bounds(finalizedText, screen.w / 2), rectBeginX + measuredText.actualBoundingBoxLeft + 5, screen.y + (screen.h / 2) + measuredText.actualBoundingBoxAscent / 2);
+    
+    // if (blinking) {
+    //     ctx.fillStyle = "#000";
+    // } else {
+    //     ctx.fillStyle = "#06dd0d";
+    // }
+    // ctx.fillRect(10,10,20,20);
+    // blinking = !blinking;
 }
 
 function Draw_TSD_Point_Data() {
@@ -441,6 +450,7 @@ function Draw_TSD_Point_Data() {
     const waypoints = Database["TSD"]["WAYPOINTS"];
     const control_measures = Database["TSD"]["CONTROLMEASURES"];
     const targets = Database["TSD"]["TARGETS"];
+    ctx.beginPath();
     ctx.roundRect(rectBeginX, rectBeginY, boxWidth, 80, 10);
     ctx.fillStyle = "#000";
     ctx.strokeStyle = "#06dd0d";
@@ -450,7 +460,10 @@ function Draw_TSD_Point_Data() {
     ctx.fillStyle = "#06dd0d";
     ctx.font = "17px Apache";
     if (pointIndex === 0) {
-        ctx.fillText("W" + (waypoints.length < 10 ? (waypoints.length + 1).toString().padStart(2, "0") : waypoints.length + 1) + "    " + (tempData[0] ? tempData[0] : "WP") + "    ###", rectBeginX + measuredText.actualBoundingBoxLeft + 8, rectBeginY + measuredText.fontBoundingBoxAscent + 8);
+        ctx.fillText("W" + (waypoints.length < 10 ? (waypoints.length + 1).toString().padStart(2, "0") : waypoints.length + 1) +
+            "    " + (tempData[0] && tempData[0] !== "IDENT" ? tempData[0] : "WP") +
+            "    " + (tempData[1] && tempData[1] !== "FREE" ? tempData[1] : "###"),
+            rectBeginX + measuredText.actualBoundingBoxLeft + 8, rectBeginY + measuredText.fontBoundingBoxAscent + 8);
     } else if (pointIndex === 1) {
         ctx.fillText("H01    TU    ###", rectBeginX + measuredText.actualBoundingBoxLeft + 8, rectBeginY + measuredText.actualBoundingBoxAscent + 8);
     } else if (pointIndex === 2) {

@@ -1,18 +1,18 @@
 const TSD_POINT_Buttons = {
-    // L1: function () {
-    //     const point = ["POINT"];
-    //     const KU = document.getElementById("KU");
-    //     tempData = [...point];
-    //     KU.placeholder = tempData[0];
-    //     numVars = 1;
-    //     KU.focus();
-    //     dataReady = true;
-    //    
-    //     storeData = function () {
-    //         // TODO: Validate point exists
-    //         tempVariables["SELECTED_POINT"] = tempData[0];
-    //     };
-    // },
+    L1: function () {
+        const point = ["POINT"];
+        const KU = document.getElementById("KU");
+        tempData = [...point];
+        KU.placeholder = tempData[0];
+        numVars = 1;
+        KU.focus();
+        dataReady = true;
+
+        storeData = function () {
+            // TODO: Validate point exists
+            tempVariables["SELECTED_POINT"] = tempData[0];
+        };
+    },
     L2: function () {
         Load_Page("TSD_POINT_ADD");
     },
@@ -24,17 +24,15 @@ const TSD_POINT_Buttons = {
 const TSD_POINT_ADD_Buttons = {
     L1: function () {
         const pointIndexKey = ["WAYPOINTS", "HAZARDS", "CONTROLMEASURES", "TARGETS"];
-        const KU = document.getElementById("KU");
-        tempData = [...pointAddSequence];
+        tempData = [...["IDENT", "FREE", "MGRS", "ALT"]];
         KU.placeholder = tempData[0];
         numVars = 4;
         KU.focus();
         inputReady = true;
         
         updateScreen = function () {
-            // Draw_TSD_Point_Data();
-            // const pointKey = {L3: ["WAYPOINT", "WP"], L4: ["HAZARD", "TU"], L5: ["CONTROL MEASURE", "CP"], L6: ["TARGET", "TG"]};
             const pointKey = ["WP", "TU", "CP", "TG"];
+            
             // L1 UPDATE START
             ctx.clearRect(screen.x, mpdButtons.L1.y + 20 - 30, 150, 60);
             Draw_Screen_Background();
@@ -51,6 +49,8 @@ const TSD_POINT_ADD_Buttons = {
                     yDeviation: 12
                 }
             });
+
+            Draw_TSD_Point_Data();
             // L1 UPDATE END
         };
         

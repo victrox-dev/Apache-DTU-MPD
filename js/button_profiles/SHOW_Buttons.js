@@ -3,10 +3,10 @@ const SHOW_Buttons = {
         Load_Page("TSD");
     },
     T5: function () {
-        Load_Page("THRT_SHOW");
+        Load_Page("TSD_THRT_SHOW");
     },
     T6: function () {
-        Load_Page("COORD_SHOW");
+        Load_Page("TSD_COORD_SHOW");
     },
     L2: function () {
         if (Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"] === "NAV") {

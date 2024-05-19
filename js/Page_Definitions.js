@@ -95,7 +95,6 @@ const page_definitions = {
 
         Clear_Screen();
         Draw_Screen_Background();
-        Draw_TSD_Grid();
         Draw_TSD_Ownship();
         
         Draw_Menu({
@@ -254,7 +253,6 @@ const page_definitions = {
 
         Clear_Screen();
         Draw_Screen_Background();
-        Draw_TSD_Grid();
         Draw_TSD_Ownship();
 
         Draw_Menu({
@@ -362,8 +360,8 @@ const page_definitions = {
         Draw_TSD_HSI();
         Draw_TSD_Bottom_Menu();
     },
-    THRT_SHOW: function () {
-        currentPage = "THRT_SHOW";
+    TSD_THRT_SHOW: function () {
+        currentPage = "TSD_THRT_SHOW";
         button_commands = {...button_commands_empty, ...TSD_Buttons, ...THRT_SHOW_Buttons};
 
         Clear_Screen();
@@ -374,8 +372,8 @@ const page_definitions = {
         
         Draw_TSD_Bottom_Menu();
     },
-    COORD_SHOW: function () {
-        currentPage = "COORD_SHOW";
+    TSD_COORD_SHOW: function () {
+        currentPage = "TSD_COORD_SHOW";
         button_commands = {...button_commands_empty, ...TSD_Buttons, ...SHOW_Buttons, ...COORD_SHOW_Buttons};
 
         const phase = Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"];
@@ -499,11 +497,11 @@ const page_definitions = {
         const targets = Database["TSD"]["TARGETS"];
         let lastPoint = null;
         if (waypoints.length !== 0) {
-            lastPoint = "W" + (waypoints.length < 10 ? waypoints.length.toString().padStart(2, "0") : waypoints.length);
+            lastPoint = "W01";
         } else if (control_measures.length !== 0) {
-            lastPoint = "C" + (control_measures.length + 50).toString();
+            lastPoint = "C51";
         } else if (targets.length !== 0) {
-            lastPoint = "T" + (targets.length < 10 ? targets.length.toString().padStart(2, "0") : targets.length);
+            lastPoint = "T01";
         } else {
             lastPoint = "?";
         }

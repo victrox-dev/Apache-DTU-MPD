@@ -1,5 +1,3 @@
-const pointAddSequence = ["IDENT", "FREE", "MGRS", "ALT"];
-
 let storeData = function () {
     alert("Storing Data...");
 };
@@ -27,10 +25,13 @@ function Process_Data() {
         updateScreen();
     } else {
         storeData();
-        KU.placeholder = "KEYBOARD UNIT (INPUT)";
-        Load_Page(returnTo);
+        KU.placeholder = "";
         inputReady = false;
-        tempData = [];
+        tempData = null;
+        Load_Page(returnTo);
+        updateScreen = function () { return null };
+        storeData = function () { return null };
+        returnTo = null;
         return null;
     }
 }

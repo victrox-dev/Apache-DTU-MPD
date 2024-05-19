@@ -15,6 +15,9 @@ let inputPrompt, returnTo = null;
 let tempData = [];
 let numVars = 0;
 let inputReady = false;
+let tempVariables = [];
+let blinking = false;
+let dialog = null;
 
 // Scripting Dependencies
 const scripts = ["js/Drawing_Functions.js", "js/Page_Definitions.js",
