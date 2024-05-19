@@ -3,17 +3,25 @@ let storeData = function () {
 };
 
 let updateScreen = function () {
-    alert("Changing UI elements");
+    alert("Changing UI Elements");
+}
+
+let validateInput = function () {
+    alert("Validate Data");
+    return true;
 }
 
 function Process_Data() {
-    // TODO: Data validation
-    // TODO: Cancel processing data and clear KU if page changed
     if (!numVars) {
         return null;
     }
-
-    const KU = document.getElementById("KU");
+    
+    if (!validateInput()) {
+        ctx.fillStyle = "red";
+        ctx.fillRect(screen.x + 125, screen.y + screen.w / 2 - (25 / 2), 25, 25);
+        return null; // TODO: Add some sort of feedback indication (why did validation fail)
+    }
+    
     tempData[tempData.length - numVars] = KU.value.toUpperCase();
     KU.value = null;
     numVars--;

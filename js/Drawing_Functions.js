@@ -187,9 +187,7 @@ function Draw_Arrow(xStart, yStart, xLen) {
     ctx.beginPath();
     ctx.moveTo(xStart, yStart);
     ctx.lineTo(xStart + xLen + 2, yStart);
-    for (let i = 0; i < 3; i++) {
-        ctx.stroke(); // Drawing line a few times to make it clearly defined
-    }
+    ctx.stroke();
 
     ctx.font = "16px Monospace, Monospace";
     ctx.fillStyle = "#06dd0d";
