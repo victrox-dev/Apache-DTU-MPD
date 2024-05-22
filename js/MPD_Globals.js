@@ -34,11 +34,11 @@ const scripts = ["js/Drawing_Functions.js", "js/Page_Definitions.js",
 // Button Related Variables
 let button_commands = {}; // Baseline buttons for initial load (empty)
 
-const horizSpacing = 85; // Button spacing
-const vertSpacing = 85; // Button spacing
+const horizSpacing = 80; // Button spacing
+const vertSpacing = 80; // Button spacing
 
 const HorizRow = {x: 210, y: 10}; // Horizontal MPD buttons start position
-const VertRow = {x: 20, y: 180}; // Vertical MPD buttons start position
+const VertRow = {x: 20, y: 190}; // Vertical MPD buttons start position
 
 const screen = {x: 880 / 2 - 670 / 2, y: 860 / 2 - 670 / 2, w: 670, h: 670} // Screen position and dimensions
 
@@ -308,7 +308,7 @@ const button_commands_empty = {
     R5: function (){},    R6: function (){},    T6: function (){},    T5: function (){},
     T4: function (){},    T3: function (){},    T2: function (){},    T1: function (){},
     FCR: function (){},   WPN: function (){},   TSD: function (){ Load_Page("TSD"); },   VID: function (){},
-    COM: function (){ Load_Page("COM_BASE"); },   AC: function (){}
+    COM: function (){ Load_Page("COM_BASE"); }, AC: function (){}
 };
 
 // Button Positions

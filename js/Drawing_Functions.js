@@ -1,4 +1,4 @@
-function MPD_Init(defaultPage = "COM_BASE") {
+function MPD_Init(defaultPage = "TSD") {
     // Create canvas element
     const body = document.querySelector("body");
     const canvas = document.createElement("canvas");
@@ -12,7 +12,7 @@ function MPD_Init(defaultPage = "COM_BASE") {
     
     // Create input element
     const input = document.createElement("input");
-    input.id = "KU";
+    // input.id = "KU";
     input.style.width = "873px";
     input.style.background = "#000";
     input.style.color = "#06dd0d";
@@ -33,7 +33,7 @@ function MPD_Init(defaultPage = "COM_BASE") {
         TSD_CompassRose: "img/TSD_CompassRose.svg"
     };
     for (let BG in TSD_Img_Resources) {
-        const imgElement = new Image(); //document.createElement("img");
+        const imgElement = new Image();
         imgElement.src = TSD_Img_Resources[BG];
         noDisplayImgDiv.appendChild(imgElement);
         window[`${BG}`] = imgElement;
@@ -191,6 +191,7 @@ function Load_Page(page, variable = null) {
 }
 
 function Draw_Arrow(xStart, yStart, xLen) {
+    ctx.save();
     ctx.strokeStyle = "#06dd0d";
     ctx.lineWidth = 3;
     ctx.beginPath();
@@ -201,20 +202,20 @@ function Draw_Arrow(xStart, yStart, xLen) {
     ctx.font = "16px Monospace, Monospace";
     ctx.fillStyle = "#06dd0d";
     ctx.fillText("\u{1F83A}", xStart + xLen, yStart + 6);
-    ctx.fillStyle
+    ctx.restore();
 }
 
-function Draw_Text(text, x, y, fontSize) {
-    ctx.font = fontSize.toString() + "px Apache";
+function Draw_Text(text, x, y, fontSize, color = "#06dd0d") {
+    ctx.font = "19px Apache"; // fontSize.toString() + "px Apache";
     const textWidth = ctx.measureText(text).width;
     ctx.fillStyle = "black";
     ctx.fillRect(x, y - fontSize + 3, textWidth, fontSize - 3);
-    ctx.fillStyle = "#06dd0d";
+    ctx.fillStyle = color;
     ctx.fillText(text, x,  y);
 }
 
 function Draw_Special_Text(text, button, boxed = false, arrow = false, xDeviation = 0, yDeviation = 0) {
-    const fontSize = 17;
+    const fontSize = 19;
     ctx.font = fontSize.toString() + "px Apache";
     ctx.fillStyle = "#06dd0d";
     const textWidth = ctx.measureText(text).width;
@@ -256,6 +257,71 @@ function Draw_Special_Text(text, button, boxed = false, arrow = false, xDeviatio
     if (arrow) {
         Draw_Arrow(x, y - 20, textWidth - 6);
     }
+}
+
+function Draw_Special_Text_New(text = { value: "default", color: "#06dd0d", size: 19, x: 0, y: 0, boxed: false, arrow: false, xDeviation: 0, yDeviation: 0, newLineSpace: 0 }) {
+    ctx.save();
+    ctx.font = text.size.toString() + "px Apache";
+    const measuredText = ctx.measureText(text.value);
+    
+    const lines = text.value.split("\n");
+    let largestWidthLine = 0;
+    lines.forEach(function (line) {
+        const currentLineMeasurement = ctx.measureText(line);
+        if (currentLineMeasurement.width > largestWidthLine) {
+            largestWidthLine = currentLineMeasurement.width;
+        }
+        const x = text.x + text.xDeviation;
+        const y = text.y + text.yDeviation;
+
+        ctx.fillStyle = "#000";
+        ctx.fillRect(x - 2, y - currentLineMeasurement.actualBoundingBoxAscent - 1, currentLineMeasurement.width + 4, currentLineMeasurement.actualBoundingBoxAscent + 2);
+
+        ctx.fillStyle = text.color;
+        ctx.fillText(line, x, y);
+        text.y += currentLineMeasurement.actualBoundingBoxAscent + text.newLineSpace;
+    });
+    
+    const boundingBox = { 
+        x: text.x - 4,
+        y: text.y - ((measuredText.actualBoundingBoxAscent + text.newLineSpace) * lines.length) - measuredText.actualBoundingBoxAscent - (text.arrow ? 12 : 4),
+        w: largestWidthLine + 8,
+        h: (measuredText.actualBoundingBoxAscent * lines.length) + text.newLineSpace + (text.arrow ? 16 : 8)
+    };
+    
+    if (text.boxed) {
+        ctx.strokeStyle = "#06dd0d";
+        ctx.lineWidth = 3;
+        ctx.strokeRect(boundingBox.x, boundingBox.y, boundingBox.w, boundingBox.h);
+    }
+
+    if (text.arrow) {
+        Draw_Arrow(text.x, boundingBox.y + 6, largestWidthLine - 6);
+    }
+    
+    // TODO: canvas.onmousemove????
+    // c.onclick = function (evt) {
+    //     let mousePos = getMousePos(c, evt);
+    //     alert(mousePos);
+    //
+    //     // for (let button in mpdButtons) {
+    //     //     if (isInside(mousePos, mpdButtons[button])) {
+    //     //         lastButton = button;
+    //     //         // TODO: Reset selected preset variable on com page... probably need to move this to somewhere else
+    //     //         // TODO: Realistically, all variables need a reset on page change... so this probably needs to be a function
+    //     //         if (currentPage.search("COM") === -1) {
+    //     //             presetSelected = null;
+    //     //             freqSelected = null;
+    //     //         }
+    //     //         button_commands[button]();
+    //     //         break;
+    //     //     }
+    //     // }
+    // };
+    
+    ctx.restore();
+    
+    return boundingBox;
 }
 
 function Draw_Menu(topMenuObj, tsd = false){

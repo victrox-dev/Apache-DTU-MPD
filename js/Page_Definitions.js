@@ -164,6 +164,19 @@ const page_definitions = {
         Draw_Screen_Background();
         Draw_TSD_Ownship();
         
+        Draw_Special_Text_New({
+            value: "FUCK\nTHIS",
+            color: "#06dd0d",
+            size: 19,
+            x: 300,
+            y: 300,
+            boxed: true,
+            arrow: false,
+            xDeviation: 0,
+            yDeviation: 0,
+            newLineSpace: 3
+        });
+        
         Draw_Menu({
             T1: {
                 text: "RPT",
@@ -805,10 +818,10 @@ const page_definitions = {
             });
             
             let currentPos = 30;
-            const drawCenterText = function (text, alignment = null) {
+            const drawCenterText = function (text, alignment = null, color = "#06dd0d") {
                 ctx.save();
-                ctx.font = "17px Apache";
-                ctx.fillStyle = "#06dd0d";
+                ctx.font = "19px Apache";
+                ctx.fillStyle = color;
                 const measuredText = ctx.measureText(text);
                 if (alignment === "left") {
                     ctx.fillText(text, boxPos.x + ctx.lineWidth + 5, boxPos.y + currentPos);
@@ -816,14 +829,14 @@ const page_definitions = {
                     ctx.fillText(text, (boxPos.x + boxWidth / 2) - (measuredText.width / 2), boxPos.y + currentPos);
                 }
                 ctx.restore();
-                currentPos += 20;
+                currentPos += 24;
             };
             // Draw center box with preset info bullshit
             ctx.save();
             ctx.lineWidth = 3;
             ctx.strokeStyle = "#06dd0d";
-            const boxWidth = 250;
-            const boxHeight = 400;
+            const boxWidth = 240;
+            const boxHeight = (mpdButtons.L6.y + 40) - mpdButtons.L2.y;
             const boxPos = { x: screen.x + screen.w / 2 - boxWidth / 2, y: mpdButtons.L2.y };
             ctx.beginPath();
             ctx.roundRect(boxPos.x, boxPos.y, boxWidth, boxHeight, 10)
@@ -837,14 +850,26 @@ const page_definitions = {
             drawCenterText("TI: 00000000", "left");
             drawCenterText("FS: 00000000", "left");
             drawCenterText("FIRE SUPPORT:", "left");
-            drawCenterText(" IP    ?", "left");
-            drawCenterText(" MASK   ?", "left");
+            drawCenterText(" IP", "left");
+            currentPos -= 24;
+            drawCenterText("      ?", "left");
+            drawCenterText(" MASK", "left");
+            currentPos -= 24;
+            drawCenterText("      ?", "left");
             currentPos += 5;
-            drawCenterText(" ACCESS RANK     0", "left");
-            drawCenterText(" TOTAL STATION    0", "left");
-            drawCenterText(" STATION ID      0", "left");
+            drawCenterText(" ACCESS RANK", "left");
+            currentPos -= 24;
+            drawCenterText("             0", "left");
+            drawCenterText(" TOTAL STATION", "left");
+            currentPos -= 24;
+            drawCenterText("             0", "left");
+            drawCenterText(" STATION ID", "left");
+            currentPos -= 24;
+            drawCenterText("             0", "left");
             currentPos += 10;
-            drawCenterText("UTO: ?", "left");
+            drawCenterText("UTO: ", "left");
+            currentPos -= 24;
+            drawCenterText("   ?", "left", "white");
             ctx.restore();
         }
 
