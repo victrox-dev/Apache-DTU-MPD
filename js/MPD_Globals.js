@@ -1,5 +1,9 @@
 // General Variables
 let c, ctx, KU, currentPage, lastButton = null;
+const windowHeight = window.innerHeight - 10;
+const scaleMultiplier = windowHeight / 860;
+const alignRight = "right";
+const alignCenter = "center";
 
 // Apache Font
 let apacheFont = new FontFace('Apache', 'url(fonts/AH-64D.ttf)');
@@ -34,13 +38,18 @@ const scripts = ["js/Drawing_Functions.js", "js/Page_Definitions.js",
 // Button Related Variables
 let button_commands = {}; // Baseline buttons for initial load (empty)
 
-const horizSpacing = 80; // Button spacing
+const horizSpacing = 84; // Button spacing 84
 const vertSpacing = 80; // Button spacing
 
 const HorizRow = {x: 210, y: 10}; // Horizontal MPD buttons start position
 const VertRow = {x: 20, y: 190}; // Vertical MPD buttons start position
 
-const screen = {x: 880 / 2 - 670 / 2, y: 860 / 2 - 670 / 2, w: 670, h: 670} // Screen position and dimensions
+// MPD screen position and dimensions
+const screen = {
+    x: 880 / 2 - 670 / 2,
+    y: 860 / 2 - 670 / 2,
+    w: 670, h: 670
+}
 
 // getMousePos for determining MPD button clicks
 function getMousePos(canvas, event) {
@@ -53,7 +62,7 @@ function getMousePos(canvas, event) {
 
 // isInside checks whether a point is inside a defined rectangle
 function isInside(pos, rect) {
-    return pos.x > rect.x && pos.x < rect.x + rect.width && pos.y < rect.y + rect.height && pos.y > rect.y
+    return pos.x > (rect.x * scaleMultiplier) && pos.x < ((rect.x + rect.width) * scaleMultiplier) && pos.y < ((rect.y + rect.height) * scaleMultiplier) && pos.y > rect.y * scaleMultiplier
 }
 
 // Load other JS scripts that the MPD is dependent on
@@ -494,3 +503,5 @@ const mpdButtons = {
         height: 40
     }
 };
+
+let mpdTextButtons = {...mpdButtons};

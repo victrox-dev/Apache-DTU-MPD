@@ -8,7 +8,15 @@ const MAP_Buttons = {
         const height = mpdButtons.L5.y - (mpdButtons.L2.y - horizSpacing);
         ctx.clearRect(screen.x, mpdButtons.L2.y - 20,150, height);
         Draw_Options_Box(screen.x, mpdButtons.L2.y - 20, 100, height, "left", "TYPE");
-        Draw_Special_Text("DIG", "L2", (Database["TSD"]["SETTINGS"]["MAP"]["TYPE"] === "DIG"));
+
+        Draw_Menu_New({
+            L2: {
+                value: "DIG",
+                boxed: (Database["TSD"]["SETTINGS"]["MAP"]["TYPE"] === "DIG"),
+                // newLineSpace: 8
+            }
+        });
+        // Draw_Special_Text("DIG", "L2", (Database["TSD"]["SETTINGS"]["MAP"]["TYPE"] === "DIG"));
         Draw_Special_Text("CHART", "L3", (Database["TSD"]["SETTINGS"]["MAP"]["TYPE"] === "CHART"));
         Draw_Special_Text("SAT", "L4", (Database["TSD"]["SETTINGS"]["MAP"]["TYPE"] === "SAT"));
         Draw_Special_Text("STICK", "L5", (Database["TSD"]["SETTINGS"]["MAP"]["TYPE"] === "STICK"));

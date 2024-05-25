@@ -97,63 +97,63 @@ const page_definitions = {
         Draw_Screen_Background();
         Draw_TSD_Ownship();
         
-        Draw_Menu({
+        Draw_Menu_New({
+            L1: {
+                value: "INST",
+                arrow: true
+            },
+            L6: {
+                value: "SA",
+                boxed: true,
+                newLineSpace: 0
+            }
+        });
+        
+        Draw_Menu_New({
             T1: {
-                text: "RPT",
-                arrow: true,
+                value: "RPT",
+                arrow: true
             },
             T2: {
-                text: "PAN",
-                arrow: true,
+                value: "PAN",
+                arrow: true
             },
             T3: {
-                text: "SHOW",
+                value: "SHOW",
                 arrow: true,
                 xDeviation: -15
             },
             T4: {
-                text: "PP",
+                value: "PP",
                 xDeviation: 15
             },
             T5: {
-                text: "COORD",
+                value: "COORD",
                 arrow: true
             },
             T6: {
-                text: "UTIL",
-                arrow: true
-            }
-        }, true);
-        
-        Draw_Menu({
-            L1: {
-                text: "INST",
+                value: "UTIL",
                 arrow: true
             },
-            L6: {
-                text: "SA",
-                boxed: true
+            R3: {
+                value: "CTR"
+            },
+            R4: {
+                value: "FRZ"
+            },
+            R5: {
+                value: "CAQ"
+            },
+            R6: {
+                value: "ACQ\nTADS",
+                newLineSpace: 8,
+                boxLast: true,
+                yDeviation: -10,
+                alignment: alignRight
             }
         });
         
         Draw_TSD_Bottom_Menu(true);
-        
-        Draw_Menu({
-            R3: {
-                text: "CTR",
-                boxed: Database["TSD"]["SETTINGS"]["MAP"]["CTR"]
-            },
-            R4: {
-                text: "FRZ"
-            },
-            R5: {
-                text: "CAQ"
-            }
-        });
-
-        // ACQ
-        Draw_Special_Text("ACQ", "R6", false, false, 0, -12);
-        Draw_Special_Text("TADS", "R6", true, false, 0, 12);
     },
     TSD_MAP: function () {
         currentPage = "TSD_MAP";
@@ -164,60 +164,50 @@ const page_definitions = {
         Draw_Screen_Background();
         Draw_TSD_Ownship();
         
-        Draw_Special_Text_New({
-            value: "FUCK\nTHIS",
-            color: "#06dd0d",
-            size: 19,
-            x: 300,
-            y: 300,
-            boxed: true,
-            arrow: false,
-            xDeviation: 0,
-            yDeviation: 0,
-            newLineSpace: 3
-        });
-        
-        Draw_Menu({
+        Draw_Menu_New({
             T1: {
-                text: "RPT",
+                value: "RPT",
                 arrow: true
             },
             T2: {
-                text: "PAN",
+                value: "PAN",
                 arrow: true
             },
             T3: {
-                text: "SHOW",
+                value: "SHOW",
                 arrow: true,
                 xDeviation: -15
             },
             T5: {
-                text: "GRID",
+                value: "GRID",
                 boxed: Database["TSD"]["SETTINGS"]["MAP"]["GRID"]
-            },
-            T6: {
-                text: "SLOPE",
-                xDeviation: -15
-            }
-        }, true);
-        
-        Draw_Menu({
-            T6: {
-                text: "SHADE",
-                xDeviation: -15,
-                yDeviation: 15
             }
         });
         
         if (Database["TSD"]["SETTINGS"]["MAP"]["TYPE"] !== "STICK") {
-            if (Database["TSD"]["SETTINGS"]["MAP"]["TYPE"] === "DIG") {
-                ctx.strokeRect(mpdButtons.T6.x + (mpdButtons.T6.width / 2) - (55 / 2) - 15, screen.y + 11, 55, 36);
-                Draw_Special_Text("GRAY", "T4", true, false, 15);
-            }
+            Draw_Menu_New({
+                T6: {
+                    value: "SLOPE\nSHADE",
+                    boxed: (Database["TSD"]["SETTINGS"]["MAP"]["TYPE"] === "DIG"),
+                    xDeviation: -15
+                }
+            });
         }
         
-        Draw_Special_Text("TYPE", "L2", false, false, 0, -12);
-        Draw_Special_Text(map_type, "L2", true, false, 0, 12);
+        Draw_Menu_New({
+            L1: {
+                value: "INST",
+                arrow: true
+            },
+            L2: {
+                value: "TYPE\n" + map_type,
+                boxLast: true,
+                newLineSpace: 8
+            } 
+        });
+        
+        // Draw_Special_Text("TYPE", "L2", false, false, 0, -12);
+        // Draw_Special_Text(map_type, "L2", true, false, 0, 12);
         
         if (map_type === "CHART") {
             Draw_Special_Text("SCALE", "L3", false, false, 0, -12);
