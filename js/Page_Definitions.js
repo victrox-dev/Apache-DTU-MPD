@@ -7,13 +7,13 @@ const page_definitions = {
         Draw_Screen_Background();
         
         const leftMenuHeight = mpdButtons.L6.y - (mpdButtons.L3.y - horizSpacing);
-        Draw_Options_Box(screen.x, mpdButtons.L3.y - 20, 65, leftMenuHeight, "left", "MISSION");
+        Draw_Options_Box(screen.x, mpdButtons.L3.y - 20, 65, leftMenuHeight, align.left, "MISSION");
         
         const rightMenuHeight = mpdButtons.R6.y - (mpdButtons.R1.y - horizSpacing);
-        Draw_Options_Box(screen.x + screen.w - 80, mpdButtons.L1.y - 20, 80, rightMenuHeight, "right", "COMMUNICATION");
+        Draw_Options_Box(screen.x + screen.w - 80, mpdButtons.L1.y - 20, 80, rightMenuHeight, align.right, "COMMUNICATION");
         
         const bottomMenuWidth = mpdButtons.B6.x - (mpdButtons.B2.x - 60);
-        Draw_Options_Box(mpdButtons.B2.x - 10, screen.y + screen.h - 48, bottomMenuWidth, 48, "bottom", "AIRCRAFT");
+        Draw_Options_Box(mpdButtons.B2.x - 10, screen.y + screen.h - 48, bottomMenuWidth, 48, align.bottom, "AIRCRAFT");
         
         Draw_Menu({
             T1: {
@@ -98,18 +98,6 @@ const page_definitions = {
         Draw_TSD_Ownship();
         
         Draw_Menu_New({
-            L1: {
-                value: "INST",
-                arrow: true
-            },
-            L6: {
-                value: "SA",
-                boxed: true,
-                newLineSpace: 0
-            }
-        });
-        
-        Draw_Menu_New({
             T1: {
                 value: "RPT",
                 arrow: true
@@ -136,7 +124,8 @@ const page_definitions = {
                 arrow: true
             },
             R3: {
-                value: "CTR"
+                value: "CTR",
+                boxed: Database["TSD"]["SETTINGS"]["MAP"]["CTR"]
             },
             R4: {
                 value: "FRZ"
@@ -149,7 +138,15 @@ const page_definitions = {
                 newLineSpace: 8,
                 boxLast: true,
                 yDeviation: -10,
-                alignment: alignRight
+                alignment: align.right
+            },
+            L1: {
+                value: "INST",
+                arrow: true
+            },
+            L6: {
+                value: "SA",
+                boxed: true
             }
         });
         
@@ -181,6 +178,36 @@ const page_definitions = {
             T5: {
                 value: "GRID",
                 boxed: Database["TSD"]["SETTINGS"]["MAP"]["GRID"]
+            },
+            R3: {
+                value: "CTR",
+                boxed: Database["TSD"]["SETTINGS"]["MAP"]["CTR"]
+            },
+            R4: {
+                value: "FRZ"
+            },
+            R5: {
+                value: "ORIENT\n" + Database["TSD"]["SETTINGS"]["MAP"]["ORIENT"],
+                boxLast: true,
+                newLineSpace: 8,
+                yDeviation: -10,
+                alignment: align.right
+            },
+            R6: {
+                value: "VIEW\n2D",
+                boxLast: true,
+                newLineSpace: 8,
+                yDeviation: -10,
+                alignment: align.right
+            },
+            L1: {
+                value: "INST",
+                arrow: true
+            },
+            L2: {
+                value: "TYPE\n" + map_type,
+                boxLast: true,
+                newLineSpace: 8
             }
         });
         
@@ -194,173 +221,148 @@ const page_definitions = {
             });
         }
         
-        Draw_Menu_New({
-            L1: {
-                value: "INST",
-                arrow: true
-            },
-            L2: {
-                value: "TYPE\n" + map_type,
-                boxLast: true,
-                newLineSpace: 8
-            } 
-        });
-        
-        // Draw_Special_Text("TYPE", "L2", false, false, 0, -12);
-        // Draw_Special_Text(map_type, "L2", true, false, 0, 12);
-        
         if (map_type === "CHART") {
-            Draw_Special_Text("SCALE", "L3", false, false, 0, -12);
-            Draw_Special_Text("1:250K", "L3", true, false, 0, 12);
-
-            Draw_Special_Text("COLOR BAND", "L4", false, false, 0, -12);
-            Draw_Special_Text("NONE", "L4", true, false, 0, 12);
+            Draw_Menu_New({
+                L3: {
+                    value: "SCALE\n1:250K",
+                    boxLast: true,
+                    newLineSpace: 8,
+                    yDeviation: -10
+                },
+                L4: {
+                    value: "COLOR BAND\nNONE",
+                    boxLast: true,
+                    newLineSpace: 8,
+                    yDeviation: -10
+                }
+            });
         } else if (map_type === "DIG") {
-            Draw_Special_Text("LEVEL", "L3", false, false, 0, -12);
-            Draw_Special_Text("0", "L3", true, false, 0, 12);
-            
-            Draw_Special_Text("COLOR BAND", "L4", false, false, 0, -12);
-            Draw_Special_Text((Database["TSD"]["SETTINGS"]["MAP"]["COLOR_BAND"] === "AC" ? "A/C" : Database["TSD"]["SETTINGS"]["MAP"]["COLOR_BAND"]), "L4", true, false, 0, 12);
-            
-            Draw_Special_Text("CONTOURS", "L5", false, false, 0, -12);
-            Draw_Special_Text("NONE", "L5", true, false, 0, 12);
-            
-            Draw_Special_Text("FFD", "L6", false, false, 0, -12);
-            Draw_Special_Text("NONE", "L6", true, false, 0, 12);
+            Draw_Menu_New({
+                L3: {
+                    value: "LEVEL\n0",
+                    boxLast: true,
+                    newLineSpace: 8,
+                    yDeviation: -10
+                },
+                L4: {
+                    value: "COLOR BAND\n" + (Database["TSD"]["SETTINGS"]["MAP"]["COLOR_BAND"] === "AC" ? "A/C" : Database["TSD"]["SETTINGS"]["MAP"]["COLOR_BAND"]),
+                    boxLast: true,
+                    newLineSpace: 8,
+                    yDeviation: -10
+                },
+                L5: {
+                    value: "CONTOURS\nNONE",
+                    boxLast: true,
+                    newLineSpace: 8,
+                    yDeviation: -10
+                },
+                L6: {
+                    value: "FFD\nNONE",
+                    boxLast: true,
+                    newLineSpace: 8,
+                    yDeviation: -10
+                }
+            });
         }
         
         Draw_TSD_Bottom_Menu(false, true);
-        
-        Draw_Menu({
-            R3: {
-                text: "CTR",
-                boxed: Database["TSD"]["SETTINGS"]["MAP"]["CTR"]
-            },
-            R4: {
-                text: "FRZ"
-            }
-        });
-        
-        Draw_Special_Text("ORIENT", "R5", false, false, 0, -12);
-        Draw_Special_Text(Database["TSD"]["SETTINGS"]["MAP"]["ORIENT"], "R5", true, false, 0, 12);
-        
-        Draw_Special_Text("VIEW", "R6", false, false, 0, -12);
-        Draw_Special_Text("2D", "R6", true, false, 0, 12);
     },
     TSD_SHOW: function () {
         currentPage = "TSD_SHOW";
         button_commands = {...button_commands_empty, ...TSD_Buttons, ...SHOW_Buttons};
-        const phase = Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"];
-        const NAV = Database["TSD"]["SETTINGS"]["SHOW"]["NAV"];
-        const ATK = Database["TSD"]["SETTINGS"]["SHOW"]["ATK"];
+        const PHASE = Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"];
+        const SHOW_SETTING = Database["TSD"]["SETTINGS"]["SHOW"];
 
         Clear_Screen();
         Draw_Screen_Background();
         Draw_TSD_Ownship();
-
-        Draw_Menu({
+        
+        Draw_Menu_New({
             T1: {
-                text: "RPT",
+                value: "RPT",
                 arrow: true
             },
             T2: {
-                text: "PAN",
+                value: "PAN",
                 arrow: true
             },
             T3: {
-                text: "SHOW",
+                value: "SHOW",
                 boxed: true,
                 arrow: true,
                 xDeviation: -15
             },
             T4: {
-                text: "SA",
+                value: "SA",
                 xDeviation: 15
+            },
+            T5: {
+                value: "THRT\nSHOW",
+                arrow: true,
+                newLineSpace: 3,
+                alignment: align.center
+            },
+            T6: {
+                value: "COORD\nSHOW",
+                arrow: true,
+                newLineSpace: 3,
+                alignment: align.center
+            },
+            L3: {
+                value: "INACTIVE ZONES",
+                boxed: SHOW_SETTING[PHASE]["INACTIVE_ZONES"]
+            },
+            L5: {
+                value: "PLT/CPG CURSOR",
+                boxed: SHOW_SETTING[PHASE]["CPG_CURSOR"]
+            },
+            L6: {
+                value: "CURSR\nINFO",
+                boxed: SHOW_SETTING[PHASE]["CURSOR_INFO"],
+                newLineSpace: 3
+            },
+            R4: {
+                value: "HSI",
+                boxed: SHOW_SETTING[PHASE]["HSI"]
+            },
+            R5: {
+                value: "ENDR",
+                boxed: SHOW_SETTING[PHASE]["ENDR"]
+            },
+            R6: {
+                value: "WIND",
+                boxed: SHOW_SETTING[PHASE]["WIND"]
             }
-        }, true);
+        });
         
         // SA Button Header (T4)
         ctx.fillStyle = "#039309";
         ctx.fillRect(mpdButtons.T4.x + (mpdButtons.T4.width / 2) - (40 / 2) + 15, screen.y, 40, 10);
         
-        Draw_Special_Text("THRT", "T5", false, true);
-        Draw_Special_Text("SHOW", "T5", false, false, 0, 16);
-        
-        Draw_Special_Text("COORD", "T6", false, true);
-        Draw_Special_Text("SHOW", "T6", false, false, 0, 16);
-        
-        if (phase === "NAV") {
-            Draw_Menu({
+        if (PHASE === "NAV") {
+            Draw_Menu_New({
                 L2: {
-                    text: "WAYPOINT DATA",
-                    boxed: NAV["WP_DATA"]
-                },
-                L3: {
-                    text: "INACTIVE ZONES",
-                    boxed: NAV["INACTIVE_ZONES"]
+                    value: "WAYPOINT DATA",
+                    boxed: SHOW_SETTING["NAV"]["WP_DATA"]
                 },
                 L4: {
-                    text: "OBSTACLES",
-                    boxed: NAV["OBSTACLES"]
+                    value: "OBSTACLES",
+                    boxed: SHOW_SETTING["NAV"]["OBSTACLES"]
                 },
-                L5: {
-                    text: "PLT/CPG CURSOR",
-                    boxed: NAV["CPG_CURSOR"]
-                },
-                L6: {
-                    text: "CURSR INFO",
-                    boxed: NAV["CURSOR_INFO"]
-                },
-                R4: {
-                    text: "HSI",
-                    boxed: NAV["HSI"]
-                },
-                R5: {
-                    text: "ENDR",
-                    boxed: NAV["ENDR"]
-                },
-                R6: {
-                    text: "WIND",
-                    boxed: NAV["WIND"]
-                }
+                
             });
         } else {
-            Draw_Menu({
+            Draw_Menu_New({
                 L2: {
-                    text: "CURRENT ROUTE",
-                    boxed: ATK["CURRENT_ROUTE"]
-                },
-                L3: {
-                    text: "INACTIVE ZONES",
-                    boxed: ATK["INACTIVE_ZONES"]
+                    value: "CURRENT ROUTE",
+                    boxed: SHOW_SETTING["ATK"]["CURRENT_ROUTE"]
                 },
                 L4: {
-                    text: "FCR TGTS/OBSTACLES",
-                    boxed: ATK["FCR_TGTS_OBSTACLES"]
-                },
-                L5: {
-                    text: "PLT/CPG CURSOR",
-                    boxed: ATK["CPG_CURSOR"]
-                },
-                L6: {
-                    text: "CURSR INFO",
-                    boxed: ATK["CURSOR_INFO"]
-                },
-                R4: {
-                    text: "HSI",
-                    boxed: ATK["HSI"]
-                },
-                R5: {
-                    text: "ENDR",
-                    boxed: ATK["ENDR"]
-                },
-                R6: {
-                    text: "WIND",
-                    boxed: ATK["WIND"]
+                    value: "FCR TGTS/OBSTACLES",
+                    boxed: SHOW_SETTING["ATK"]["FCR_TGTS_OBSTACLES"]
                 }
             });
         }
-        Draw_TSD_HSI();
         Draw_TSD_Bottom_Menu();
     },
     TSD_THRT_SHOW: function () {
@@ -378,116 +380,108 @@ const page_definitions = {
     TSD_COORD_SHOW: function () {
         currentPage = "TSD_COORD_SHOW";
         button_commands = {...button_commands_empty, ...TSD_Buttons, ...SHOW_Buttons, ...COORD_SHOW_Buttons};
-
-        const phase = Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"];
-        const NAV = Database["TSD"]["SETTINGS"]["SHOW"]["NAV"];
-        const ATK = Database["TSD"]["SETTINGS"]["SHOW"]["ATK"];
+        const PHASE = Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"];
+        const SHOW_SETTING = Database["TSD"]["SETTINGS"]["SHOW"];
 
         Clear_Screen();
         Draw_Screen_Background();
         Draw_TSD_Ownship();
-
-        Draw_Menu({
+        
+        Draw_Menu_New({
             T1: {
-                text: "RPT",
+                value: "RPT",
                 arrow: true
             },
             T2: {
-                text: "PAN",
+                value: "PAN",
                 arrow: true
             },
             T3: {
-                text: "SHOW",
+                value: "SHOW",
                 boxed: true,
                 arrow: true,
                 xDeviation: -15
             },
             T4: {
-                text: "SA",
+                value: "SA",
                 xDeviation: 15
+            },
+            T5: {
+                value: "THRT\nSHOW",
+                arrow: true,
+                newLineSpace: 3,
+                alignment: align.center
+            },
+            T6: {
+                value: "COORD\nSHOW",
+                arrow: true,
+                boxed: true,
+                newLineSpace: 3,
+                alignment: align.center
+            },
+            L2: {
+                value: "CONTROL MEASURES",
+                boxed: SHOW_SETTING[PHASE]["COORD_SHOW"]["CONTROL_MEASURES"]
+            },
+            L3: {
+                value: "FRIENDLY UNITS",
+                boxed: SHOW_SETTING[PHASE]["COORD_SHOW"]["FRIENDLY_UNITS"]
+            },
+            L4: {
+                value: "ENEMY UNITS",
+                boxed: SHOW_SETTING[PHASE]["COORD_SHOW"]["ENEMY_UNITS"]
+            },
+            L5: {
+                value: "PLANNED TGTS/THREATS",
+                boxed: SHOW_SETTING[PHASE]["COORD_SHOW"]["PLANNED_TGTS_THREATS"]
+            },
+            R1: {
+                value: "LINES"
+            },
+            R2: {
+                value: "AREAS"
             }
-        }, true);
+        });
+
+        if (PHASE === "ATK") {
+            Draw_Menu_New({
+                R3: {
+                    value: "SHOT",
+                    boxed: SHOW_SETTING[PHASE]["COORD_SHOW"]["SHOT"]
+                },
+            });
+        }
 
         // SA Button Header (T4)
         ctx.fillStyle = "#039309";
         ctx.fillRect(mpdButtons.T4.x + (mpdButtons.T4.width / 2) - (40 / 2) + 15, screen.y, 40, 10);
-
-        Draw_Special_Text("THRT", "T5", false, true);
-        Draw_Special_Text("SHOW", "T5", false, false, 0, 16);
-
-        Draw_Special_Text("COORD", "T6", false, true);
-        Draw_Special_Text("SHOW", "T6", false, false, 0, 16);
-        ctx.strokeRect(mpdButtons.T6.x + (mpdButtons.T6.width / 2) - (54 /2), screen.y + ctx.lineWidth / 2, 54, 45); // Coord show boxed
-        
-        if (phase === "NAV") {
-            Draw_Menu({
-                L2: {
-                    text: "CONTROL MEASURES",
-                    boxed: NAV["COORD_SHOW"]["CONTROL_MEASURES"]
-                },
-                L3: {
-                    text: "FRIENDLY UNITS",
-                    boxed: NAV["COORD_SHOW"]["FRIENDLY_UNITS"]
-                },
-                L4: {
-                    text: "ENEMY UNITS",
-                    boxed: NAV["COORD_SHOW"]["ENEMY_UNITS"]
-                },
-                L5: {
-                    text: "PLANNED TGTS/THREATS",
-                    boxed: NAV["COORD_SHOW"]["PLANNED_TGTS_THREATS"]
-                }
-            });
-        } else {
-            Draw_Menu({
-                L2: {
-                    text: "CONTROL MEASURES",
-                    boxed: ATK["COORD_SHOW"]["CONTROL_MEASURES"]
-                },
-                L3: {
-                    text: "FRIENDLY UNITS",
-                    boxed: ATK["COORD_SHOW"]["FRIENDLY_UNITS"]
-                },
-                L4: {
-                    text: "ENEMY UNITS",
-                    boxed: ATK["COORD_SHOW"]["ENEMY_UNITS"]
-                },
-                L5: {
-                    text: "PLANNED TGTS/THREATS",
-                    boxed: ATK["COORD_SHOW"]["PLANNED_TGTS_THREATS"]
-                },
-                R3: {
-                    text: "SHOT",
-                    boxed: ATK["COORD_SHOW"]["SHOT"]
-                },
-            });
-        }
         
         // R1/R2 Bullshit START
-        Draw_Special_Text("LINES", "R1");
-        Draw_Special_Text("AREAS", "R2");
         ctx.fillStyle = "#039309";
-        ctx.fillRect(screen.x + screen.w, mpdButtons.R1.y, -10, 40);
-        ctx.fillRect(screen.x + screen.w, mpdButtons.R2.y, -10, 40);
+        ctx.fillRect(screen.x + screen.w - 10, mpdButtons.R1.y, 10, 40);
+        ctx.fillRect(screen.x + screen.w - 10, mpdButtons.R2.y, 10, 40);
         // R1/R2 Bullshit END
         
-        // Phase Identifier START
-        let text, textWidth;
-        ctx.font = "17px Apache";
-        if (phase === "NAV") {
-            text = "NAVIGATION PHASE";
-            textWidth = ctx.measureText(text).width;
-        } else {
-            text = "ATTACK PHASE";
-            textWidth = ctx.measureText(text).width;
-        }
-        ctx.beginPath();
-        ctx.fillStyle = "black";
-        ctx.roundRect(screen.x + screen.w / 2 - ((textWidth + 10) / 2), screen.y + 54, textWidth + 10, 20, 8);
-        ctx.fill();
-        ctx.stroke();
-        Draw_Text(text, screen.x + screen.w / 2 - ((textWidth + 10) / 2) + ((textWidth + 10 - textWidth) / 2), screen.y + 54 + ctx.measureText(text).actualBoundingBoxAscent + 4, 17);
-        // Phase Identifier END
+        // // Phase Identifier START
+        // // TODO: Re-work this POF and make it a function that can simply be called on show pages.
+        // let text, textWidth;
+        // ctx.font = "19px Apache";
+        // if (PHASE === "NAV") {
+        //     text = "NAVIGATION PHASE";
+        //     textWidth = ctx.measureText(text).width;
+        // } else {
+        //     text = "ATTACK PHASE";
+        //     textWidth = ctx.measureText(text).width;
+        // }
+        // ctx.beginPath();
+        // ctx.fillStyle = "#000";
+        // ctx.strokeStyle = "#06dd0d";
+        // ctx.roundRect(screen.x + screen.w / 2 - ((textWidth + 10) / 2), screen.y + 54, textWidth + 10, 20, 8);
+        // ctx.fill();
+        // ctx.lineWidth = 3;
+        // ctx.stroke();
+        // Draw_Text(text, screen.x + screen.w / 2 - ((textWidth + 10) / 2) + ((textWidth + 10 - textWidth) / 2), screen.y + 54 + ctx.measureText(text).actualBoundingBoxAscent + 4, 17);
+        // // Phase Identifier END
         
         Draw_TSD_Bottom_Menu();
     },

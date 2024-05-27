@@ -2,8 +2,13 @@
 let c, ctx, KU, currentPage, lastButton = null;
 const windowHeight = window.innerHeight - 10;
 const scaleMultiplier = windowHeight / 860;
-const alignRight = "right";
-const alignCenter = "center";
+const align = {
+    center: "center",
+    top: "top",
+    bottom: "bottom",
+    right: "right",
+    left: "left"
+};
 
 // Apache Font
 let apacheFont = new FontFace('Apache', 'url(fonts/AH-64D.ttf)');

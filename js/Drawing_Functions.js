@@ -1,4 +1,4 @@
-function MPD_Init(defaultPage = "TSD") {
+function MPD_Init(defaultPage = "TSD_SHOW") {
     // Create canvas element
     const body = document.querySelector("body");
     const canvas = document.createElement("canvas");
@@ -285,7 +285,6 @@ function Get_Multiline_Text_Data(string = "") {
     return largestWidthLine;
 }
 
-// TODO: T1 thru T6 and B1 thru B6 centered horizontally; L1 thru L6 butts against x bound; R1 thru R6 butts against x far boundary
 function Draw_Special_Text_New(text = { value: "default" }) {
     ctx.save();
     const textDefault = {
@@ -319,9 +318,9 @@ function Draw_Special_Text_New(text = { value: "default" }) {
     let x = 0;
     lines.forEach(function (line) {
         currentLineMeasurement = ctx.measureText(line);
-        if (text.alignment === alignRight) {
+        if (text.alignment === align.right) {
             x = text.x + text.xDeviation + (largestWidthLine - currentLineMeasurement.width);
-        } else if (text.alignment === alignCenter) {
+        } else if (text.alignment === align.center) {
             x = text.x + text.xDeviation + (largestWidthLine / 2 - currentLineMeasurement.width / 2);
         } else {
             x = text.x + text.xDeviation;
@@ -352,8 +351,8 @@ function Draw_Special_Text_New(text = { value: "default" }) {
     
     if (text.boxLast) {
         ctx.strokeStyle = "#06dd0d";
-        ctx.lineWidth = 3;
-        ctx.strokeRect(text.x + text.xDeviation + (largestWidthLine / 2 - currentLineMeasurement.width / 2) - 4, text.y + text.yDeviation - ((currentLineMeasurement.fontBoundingBoxAscent + text.newLineSpace) * 2) + 4, currentLineMeasurement.width + 8, currentLineMeasurement.actualBoundingBoxAscent + 8);
+        ctx.lineWidth = 3; // text.x + text.xDeviation + (largestWidthLine / 2 - currentLineMeasurement.width / 2) - 4
+        ctx.strokeRect(x - 4, text.y + text.yDeviation - ((currentLineMeasurement.fontBoundingBoxAscent + text.newLineSpace) * 2) + 4, currentLineMeasurement.width + 8, currentLineMeasurement.actualBoundingBoxAscent + 8);
     }
 
     if (text.arrow) {
@@ -425,18 +424,17 @@ function Draw_Menu(topMenuObj, tsd = false){
 }
 
 function Draw_TSD_Bottom_Menu(tsdBoxed = false, mapBoxed = false, routeBoxed = false, pointBoxed = false) {
-    debug_centerline();
     Draw_Menu_New({
         B1: {
             value: "TSD",
-            boxed: true
+            boxed: tsdBoxed
         },
         B2: {
             value: "PHASE\n" + Database["TSD"]["SETTINGS"]["DEFAULT_PHASE"],
             boxLast: true,
             newLineSpace: 8,
             yDeviation: -24,
-            alignment: alignCenter
+            alignment: align.center
         },
         B3: {
             value: "BAM",
@@ -451,7 +449,8 @@ function Draw_TSD_Bottom_Menu(tsdBoxed = false, mapBoxed = false, routeBoxed = f
         },
         B5: {
             value: "RTE",
-            arrow: true
+            arrow: true,
+            boxed: routeBoxed
         },
         B6: {
             value: "POINT",
@@ -470,12 +469,6 @@ function Draw_TSD_Bottom_Menu(tsdBoxed = false, mapBoxed = false, routeBoxed = f
     ctx.stroke();
     Draw_Text("0", screen.x + (screen.w / 2) + 6, screen.y + screen.h - 36 + 20, 19);
     // WP Azimuth END
-
-    // Draw_Special_Text("MAP", "B4", mapBoxed, true, 20);
-    //
-    // Draw_Special_Text("RTE", "B5", routeBoxed, true);
-    //
-    // Draw_Special_Text("POINT", "B6", pointBoxed, true);
 }
 
 function Draw_TSD_Grid() {
